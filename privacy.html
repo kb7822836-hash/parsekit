@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy | Parsekit</title>
+<meta name="description" content="Parsekit's privacy policy: what data is collected, how advertising cookies are used, and how to contact us.">
+<link rel="canonical" href="https://parsekit.net/privacy.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">privacy policy</p>
+    <h1>Privacy Policy</h1>
+    <p>Last updated: <span id="updated-date"></span></p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+    <h2>Data you paste into the tools</h2>
+    <p>Parsekit's tools (JSON Formatter, JSON to CSV, Merge JSON) run entirely in your browser. Whatever you paste into a tool is processed locally by JavaScript on the page and is never sent to, or stored on, any Parsekit server.</p>
+
+    <h2>Cookies and advertising</h2>
+    <p>This site displays ads served by Google AdSense. Google and its partners may use cookies or similar technologies to serve ads based on your prior visits to this or other websites. You can learn more about how Google uses this data, and manage your ad personalization settings, at <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google's Ads Policy page</a>.</p>
+
+    <h2>Analytics</h2>
+    <p>Parsekit may use privacy-respecting analytics to understand aggregate traffic (for example, how many people visit a page), which does not identify individual visitors by name or paste content.</p>
+
+    <h2>Third-party links</h2>
+    <p>Pages on this site may link to third-party resources. Parsekit is not responsible for the privacy practices of external sites.</p>
+
+    <h2>Children's privacy</h2>
+    <p>Parsekit is a general-audience developer tools site and is not directed at children under 13. We do not knowingly collect personal information from children.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>This policy may be updated as the site grows. Continued use of the site after a change means you accept the updated policy.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy can be sent to <a href="mailto:hello@parsekit.net">hello@parsekit.net</a>.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© <span id="year"></span> Parsekit. Everything runs locally in your browser — nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js"></script>
+<script>
+  document.getElementById('updated-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+</script>
+</body>
+</html>

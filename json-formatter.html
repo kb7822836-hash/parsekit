@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Formatter &amp; Validator — Free Online Tool | Parsekit</title>
+<meta name="description" content="Format and validate JSON online for free. Paste your JSON, get a clean indented version, and see exactly where a syntax error is if it's broken. No signup, nothing leaves your browser.">
+<link rel="canonical" href="https://parsekit.net/json-formatter.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JSON Formatter & Validator",
+  "url": "https://parsekit.net/json-formatter.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Format and validate JSON online for free. Paste JSON, get a clean indented version, and see exactly where a syntax error is if it's broken."
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html" aria-current="page">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">tool 01 / formatter</p>
+    <h1>JSON Formatter &amp; Validator</h1>
+    <p>Paste minified or messy JSON on the left. Parsekit checks it's valid and prints a clean, indented version on the right — or tells you exactly which line broke.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="controls-row">
+    <button class="btn accent" id="fmt-run">Format</button>
+    <button class="btn secondary" id="fmt-minify">Minify</button>
+    <button class="btn secondary" id="fmt-copy">Copy output</button>
+    <button class="btn secondary" id="fmt-clear">Clear</button>
+    <label for="fmt-indent" style="margin-left:auto; font-size:0.88rem; color:var(--ink-soft);">Indent:</label>
+    <select class="small-select" id="fmt-indent">
+      <option value="2" selected>2 spaces</option>
+      <option value="4">4 spaces</option>
+      <option value="8">8 spaces</option>
+    </select>
+  </div>
+
+  <div class="workbench">
+    <div class="panel">
+      <div class="panel-label"><span>input</span></div>
+      <textarea id="fmt-input" spellcheck="false" placeholder='{"name":"Ali","active":true,"roles":["admin","editor"]}'></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-label"><span>output</span></div>
+      <pre class="output-box" id="fmt-output"></pre>
+    </div>
+  </div>
+  <p class="status-line" id="fmt-status"></p>
+
+  <div class="helper-copy">
+    <h2>What this tool does</h2>
+    <p>JSON formatting takes compact or inconsistently spaced JSON and lays it out with consistent indentation, so it's readable and easy to review or debug. Validation checks that the JSON follows correct syntax — matched brackets, quoted keys, no trailing commas — and points out exactly where it breaks if it doesn't.</p>
+    <h2>Why it runs in your browser</h2>
+    <p>Nothing you paste here is sent to a server. Parsing and formatting happen entirely in your browser's JavaScript engine, so you can safely format JSON that contains real data without it leaving your machine.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>What does it mean when my JSON is marked invalid?</h3>
+    <p>It means the text doesn't follow JSON's strict syntax rules — a common cause is a trailing comma after the last item, an unquoted key, or a missing closing bracket. The status line below the boxes shows the line and column where the parser gave up, so you can jump straight to the problem.</p>
+    <h3>Is it safe to paste sensitive data into this formatter?</h3>
+    <p>Yes — the formatting and validation happen entirely in your browser using JavaScript's built-in JSON parser. Nothing you paste is uploaded to a server or stored anywhere, so it's safe to use with real data, API responses, or config files.</p>
+    <h3>What's the difference between formatting and minifying?</h3>
+    <p>Formatting adds indentation and line breaks so the JSON is easy for a human to read. Minifying strips all unnecessary whitespace to produce the smallest possible file size — useful when you're sending JSON over a network or embedding it in code.</p>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does it mean when my JSON is marked invalid?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It means the text doesn't follow JSON's strict syntax rules — a common cause is a trailing comma after the last item, an unquoted key, or a missing closing bracket. The tool shows the line and column where parsing failed." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to paste sensitive data into this formatter?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — formatting and validation happen entirely in your browser. Nothing you paste is uploaded to a server or stored anywhere." }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the difference between formatting and minifying?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Formatting adds indentation and line breaks for readability. Minifying strips all unnecessary whitespace to produce the smallest possible file size." }
+    }
+  ]
+}
+</script>
+
+<div class="ad-slot"><div class="ad-slot-inner">Ad placement — in-content (below tool, above footer)</div></div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© <span id="year"></span> Parsekit. Everything runs locally in your browser — nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js"></script>
+</body>
+</html>

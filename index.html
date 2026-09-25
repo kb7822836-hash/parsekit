@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parsekit — Free JSON Tools for Developers</title>
+<meta name="description" content="Free, fast JSON tools that run entirely in your browser: format &amp; validate JSON, convert JSON to CSV, and merge JSON files. No signup, no upload.">
+<link rel="canonical" href="https://parsekit.net/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/" aria-current="page">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow-line">// no signup · no upload · runs in your browser</p>
+    <h1>Small, sharp tools for shaping JSON.</h1>
+    <p class="lede">Format it, validate it, turn it into a spreadsheet, or merge two files into one — pick a tool below and get your answer in seconds.</p>
+  </div>
+</section>
+
+<div class="tool-grid">
+  <div class="tool-card">
+    <span class="tool-index">01</span>
+    <h3>JSON Formatter &amp; Validator</h3>
+    <p>Paste messy or minified JSON, get a clean, indented version back — with a clear error if something's broken.</p>
+    <a class="go-link" href="/json-formatter.html">Open tool →</a>
+  </div>
+  <div class="tool-card">
+    <span class="tool-index">02</span>
+    <h3>JSON to CSV Converter</h3>
+    <p>Turn an array of JSON objects into a CSV file you can open straight in Excel or Google Sheets.</p>
+    <a class="go-link" href="/json-to-csv.html">Open tool →</a>
+  </div>
+  <div class="tool-card">
+    <span class="tool-index">03</span>
+    <h3>Merge JSON Files</h3>
+    <p>Combine two JSON objects or arrays into one — deep merge for objects, concatenation for arrays.</p>
+    <a class="go-link" href="/merge-json.html">Open tool →</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© <span id="year"></span> Parsekit. Everything runs locally in your browser — nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

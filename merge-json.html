@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merge JSON Files Online — Free Tool | Parsekit</title>
+<meta name="description" content="Merge two JSON objects or arrays into one. Deep merge for objects, concatenation for arrays. Free, no signup, runs entirely in your browser.">
+<link rel="canonical" href="https://parsekit.net/merge-json.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Merge JSON Files",
+  "url": "https://parsekit.net/merge-json.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Merge two JSON objects or arrays into one. Deep merge for objects, concatenation for arrays. Free, no signup, runs entirely in your browser."
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html" aria-current="page">Merge JSON</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">tool 03 / merge</p>
+    <h1>Merge JSON Files</h1>
+    <p>Paste two JSON objects — or two JSON arrays — into the panels below. Parsekit combines them into a single result: a deep merge for objects (matching keys are combined, conflicts are won by the second panel), or a concatenation for arrays.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="controls-row">
+    <button class="btn accent" id="merge-run">Merge</button>
+    <button class="btn secondary" id="merge-download" disabled>Download .json</button>
+    <button class="btn secondary" id="merge-clear">Clear</button>
+  </div>
+
+  <div class="workbench">
+    <div class="panel">
+      <div class="panel-label"><span>JSON A</span></div>
+      <textarea id="merge-a" spellcheck="false" placeholder='{"user":{"name":"Ali","age":24}}'></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-label"><span>JSON B</span></div>
+      <textarea id="merge-b" spellcheck="false" placeholder='{"user":{"age":25,"city":"Jhelum"}}'></textarea>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom: 8px;">
+    <div class="panel-label"><span>merged result</span></div>
+    <pre class="output-box" id="merge-output"></pre>
+  </div>
+  <p class="status-line" id="merge-status"></p>
+
+  <div class="helper-copy">
+    <h2>How the merge works</h2>
+    <p>If both inputs are objects, Parsekit merges them key by key. When a key holds another object on both sides, it merges those nested objects too, going as deep as needed. When a key's value is a plain value or an array on either side, the value from JSON B replaces the one from JSON A.</p>
+    <h2>Arrays</h2>
+    <p>If both inputs are arrays instead of objects, they're joined end to end into one longer array — nothing is deduplicated, so repeated items are kept.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>What happens when both files have the same key?</h3>
+    <p>If both sides hold an object for that key, the two objects are merged recursively. Otherwise, the value from JSON B wins and replaces the value from JSON A.</p>
+    <h3>Can I merge more than two files?</h3>
+    <p>This tool merges two inputs at a time. To combine three or more, merge the first two, then paste that result back into panel A along with the third file in panel B, and repeat.</p>
+    <h3>What if one file is an array and the other is an object?</h3>
+    <p>Both inputs need to be the same shape — two objects, or two arrays. If they don't match, the tool shows an error instead of guessing how to combine them.</p>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What happens when both files have the same key?",
+      "acceptedAnswer": { "@type": "Answer", "text": "If both sides hold an object for that key, the two objects are merged recursively. Otherwise, the value from JSON B replaces the value from JSON A." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I merge more than two files?",
+      "acceptedAnswer": { "@type": "Answer", "text": "This tool merges two inputs at a time. To combine three or more, merge the first two, then merge that result with the third, and repeat." }
+    },
+    {
+      "@type": "Question",
+      "name": "What if one file is an array and the other is an object?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Both inputs need to be the same shape — two objects, or two arrays. If they don't match, the tool shows an error instead of guessing." }
+    }
+  ]
+}
+</script>
+
+<div class="ad-slot"><div class="ad-slot-inner">Ad placement — in-content (below tool, above footer)</div></div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© <span id="year"></span> Parsekit. Everything runs locally in your browser — nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js"></script>
+</body>
+</html>
