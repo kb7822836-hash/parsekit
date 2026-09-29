@@ -61,6 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setStatus(fmtStatus, 'Copied to clipboard.', 'ok');
     });
     fmtIndent.addEventListener('change', () => { if (fmtOutput.textContent) runFormat(false); });
+    document.getElementById('fmt-sample').addEventListener('click', () => {
+      fmtInput.value = '{"name":"Ali","age":24,"active":true,"roles":["admin","editor"]}';
+      runFormat(false);
+    });
   }
 
   /* ---------------- JSON to CSV Converter ---------------- */
@@ -101,6 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let lastCsv = '';
+
+    document.getElementById('csv-sample').addEventListener('click', () => {
+      csvInput.value = '[{"name":"Ali","city":"Jhelum"},{"name":"Sara","city":"Lahore"}]';
+    });
 
     document.getElementById('csv-run').addEventListener('click', () => {
       const raw = csvInput.value.trim();
@@ -177,6 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let lastMerged = null;
+
+    document.getElementById('merge-sample').addEventListener('click', () => {
+      mergeA.value = '{"user":{"name":"Ali","age":24}}';
+      mergeB.value = '{"user":{"age":25,"city":"Jhelum"}}';
+    });
 
     document.getElementById('merge-run').addEventListener('click', () => {
       const rawA = mergeA.value.trim();
