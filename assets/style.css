@@ -441,3 +441,15 @@ footer.site-footer {
 .quick-tool .workbench { margin-bottom: 16px; }
 
 .tool-grid { padding-top: 40px; margin-top: 8px; }
+
+/* ---------- Home: polish ---------- */
+
+.hero-inner { z-index: 1; }
+
+.tool-grid {
+  background: none;
+  border: none;
+  gap: 16px;
+}
+
+.tool-card { border: 1px solid var(--steel-line); }
