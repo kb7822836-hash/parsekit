@@ -414,3 +414,30 @@ footer.site-footer {
 @media (max-width: 640px) {
   .header-inner { flex-direction: column; align-items: flex-start; }
 }
+
+/* ---------- Home: quick tool ---------- */
+
+.hero-inner { padding: 44px 24px 40px; }
+
+.quick-tool {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 24px 0;
+}
+
+.quick-kicker {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--steel);
+  margin: 0 0 12px;
+}
+
+.quick-tool textarea,
+.quick-tool .output-box {
+  min-height: 200px;
+  max-height: 320px;
+}
+
+.quick-tool .workbench { margin-bottom: 16px; }
+
+.tool-grid { padding-top: 40px; margin-top: 8px; }

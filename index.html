@@ -43,6 +43,38 @@
   </div>
 </section>
 
+<section class="quick-tool">
+  <div class="quick-inner">
+    <p class="quick-kicker">// try it now &mdash; paste JSON, get it formatted</p>
+    <div class="workbench">
+      <div class="panel">
+        <div class="panel-label"><span>INPUT</span></div>
+        <textarea id="fmt-input" spellcheck="false" placeholder='{"paste":"your JSON here"}'></textarea>
+      </div>
+      <div class="panel">
+        <div class="panel-label">
+          <span>OUTPUT</span>
+          <select id="fmt-indent" class="small-select" aria-label="Indent size">
+            <option value="2" selected>2 spaces</option>
+            <option value="4">4 spaces</option>
+            <option value="1">1 space</option>
+          </select>
+        </div>
+        <pre id="fmt-output" class="output-box"></pre>
+      </div>
+    </div>
+    <div class="controls-row">
+      <button class="btn accent" id="fmt-run">Format</button>
+      <button class="btn secondary" id="fmt-minify">Minify</button>
+      <button class="btn secondary" id="fmt-sample">Load sample</button>
+      <button class="btn secondary" id="fmt-copy">Copy</button>
+      <button class="btn secondary" id="fmt-clear">Clear</button>
+      <a class="go-link" href="/json-formatter.html" style="margin-left:auto;font-family:var(--mono);font-size:0.88rem;">Full formatter &rarr;</a>
+    </div>
+    <div id="fmt-status" class="status-line"></div>
+  </div>
+</section>
+
 <div class="tool-grid">
   <div class="tool-card">
     <span class="tool-index">01</span>

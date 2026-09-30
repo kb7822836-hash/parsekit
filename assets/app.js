@@ -247,4 +247,15 @@ document.addEventListener('DOMContentLoaded', () => {
       URL.revokeObjectURL(url);
     });
   }
+
+  /* ---------------- GA4 tool usage events ---------------- */
+  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json']].forEach(([id, name]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('click', () => {
+        if (typeof gtag === 'function') gtag('event', 'tool_use', { tool_name: name, page_path: location.pathname });
+      });
+    }
+  });
+
 });
