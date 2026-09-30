@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON to YAML Converter - Free, Runs in Your Browser | Parsekit</title>
+<meta name="description" content="Convert JSON to YAML instantly in your browser. Free, no signup, nothing uploaded. Handles nested objects, arrays, and special characters.">
+<link rel="canonical" href="https://parsekit.net/json-to-yaml.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html" aria-current="page">JSON to YAML</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">// tool 04</p>
+    <h1>JSON to YAML Converter</h1>
+    <p>Paste JSON, get clean YAML back. Runs entirely in your browser, nothing you paste is uploaded anywhere.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="workbench">
+    <div class="panel">
+      <div class="panel-label"><span>JSON INPUT</span></div>
+      <textarea id="yaml-input" spellcheck="false" placeholder='{"paste":"your JSON here"}'></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-label">
+        <span>YAML OUTPUT</span>
+        <select id="yaml-indent" class="small-select" aria-label="Indent size">
+          <option value="2" selected>2 spaces</option>
+          <option value="4">4 spaces</option>
+        </select>
+      </div>
+      <pre id="yaml-output" class="output-box"></pre>
+    </div>
+  </div>
+
+  <div class="controls-row">
+    <button class="btn accent" id="yaml-run">Convert to YAML</button>
+    <button class="btn secondary" id="yaml-sample">Load sample</button>
+    <button class="btn secondary" id="yaml-copy">Copy</button>
+    <button class="btn secondary" id="yaml-download" disabled>Download .yaml</button>
+    <button class="btn secondary" id="yaml-clear">Clear</button>
+  </div>
+  <div id="yaml-status" class="status-line"></div>
+
+  <div class="helper-copy">
+    <h2>What this tool does</h2>
+    <p>YAML is the format behind Docker Compose files, Kubernetes manifests, GitHub Actions workflows and many config files. If your data is in JSON, this tool rewrites it as readable, indented YAML in one click.</p>
+    <h3>How to use it</h3>
+    <p>Paste valid JSON on the left, pick 2 or 4 space indentation, and press Convert. Copy the result or download it as a .yaml file.</p>
+    <h3>Is my data safe?</h3>
+    <p>Yes. The conversion happens in your browser with JavaScript. Nothing is sent to a server.</p>
+    <h3>What gets quoted?</h3>
+    <p>Strings that YAML could misread, such as "true", "null", numbers written as text, or text containing a colon followed by a space, are automatically wrapped in quotes so the meaning stays the same.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser - nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js"></script>
+</body>
+</html>

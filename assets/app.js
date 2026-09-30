@@ -248,8 +248,125 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------------- JSON to YAML Converter ---------------- */
+  const yamlInput = document.getElementById('yaml-input');
+  if (yamlInput) {
+    const yamlOutput = document.getElementById('yaml-output');
+    const yamlStatus = document.getElementById('yaml-status');
+    const yamlIndent = document.getElementById('yaml-indent');
+    const yamlDownload = document.getElementById('yaml-download');
+    let lastYaml = '';
+
+    const setYamlStatus = (message, kind) => {
+      yamlStatus.textContent = message;
+      yamlStatus.className = 'status-line' + (kind ? ' ' + kind : '');
+    };
+
+    const isContainer = (v) => v !== null && typeof v === 'object';
+    const isEmptyContainer = (v) => Array.isArray(v) ? v.length === 0 : Object.keys(v).length === 0;
+
+    function yamlString(s) {
+      if (s === '') return '""';
+      const risky =
+        /^\s|\s$/.test(s) ||
+        /[\n\r\t]/.test(s) ||
+        /^[-?:,\[\]{}#&*!|>'"%@`]/.test(s) ||
+        /: |\s#|:$/.test(s) ||
+        /^(true|false|null|yes|no|on|off|y|n|~)$/i.test(s) ||
+        /^[-+]?(\d[\d_]*\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(s) ||
+        /^0[xo]/i.test(s);
+      return risky ? JSON.stringify(s) : s;
+    }
+
+    function yamlInline(v) {
+      if (isContainer(v)) return Array.isArray(v) ? '[]' : '{}';
+      if (v === null) return 'null';
+      if (typeof v === 'boolean' || typeof v === 'number') return String(v);
+      return yamlString(String(v));
+    }
+
+    function toYaml(v, unit, depth) {
+      const pad = unit.repeat(depth);
+      if (Array.isArray(v)) {
+        if (!v.length) return pad + '[]';
+        const marker = '-' + ' '.repeat(unit.length - 1);
+        return v.map((item) => {
+          if (isContainer(item) && !isEmptyContainer(item)) {
+            const inner = toYaml(item, unit, depth + 1);
+            return pad + marker + inner.slice(unit.length * (depth + 1));
+          }
+          return pad + '- ' + yamlInline(item);
+        }).join('\n');
+      }
+      if (isContainer(v)) {
+        const keys = Object.keys(v);
+        if (!keys.length) return pad + '{}';
+        return keys.map((k) => {
+          const val = v[k];
+          const key = yamlString(k);
+          if (isContainer(val) && !isEmptyContainer(val)) {
+            return pad + key + ':\n' + toYaml(val, unit, depth + 1);
+          }
+          return pad + key + ': ' + yamlInline(val);
+        }).join('\n');
+      }
+      return pad + yamlInline(v);
+    }
+
+    const runYaml = () => {
+      const raw = yamlInput.value.trim();
+      if (!raw) {
+        yamlOutput.textContent = '';
+        setYamlStatus('Paste some JSON on the left to get started.', '');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        lastYaml = toYaml(parsed, ' '.repeat(parseInt(yamlIndent.value, 10)), 0);
+        yamlOutput.textContent = lastYaml;
+        yamlDownload.disabled = false;
+        setYamlStatus('Converted to YAML successfully.', 'ok');
+      } catch (err) {
+        yamlOutput.textContent = '';
+        lastYaml = '';
+        yamlDownload.disabled = true;
+        setYamlStatus('Invalid JSON - ' + (err.message || 'could not parse.'), 'error');
+      }
+    };
+
+    document.getElementById('yaml-run').addEventListener('click', runYaml);
+    yamlIndent.addEventListener('change', () => { if (yamlOutput.textContent) runYaml(); });
+    document.getElementById('yaml-sample').addEventListener('click', () => {
+      yamlInput.value = '{"name":"Ali","age":24,"active":true,"roles":["admin","editor"],"address":{"city":"Jhelum","zip":null}}';
+      runYaml();
+    });
+    document.getElementById('yaml-copy').addEventListener('click', () => {
+      if (!lastYaml) return;
+      navigator.clipboard.writeText(lastYaml);
+      setYamlStatus('Copied to clipboard.', 'ok');
+    });
+    document.getElementById('yaml-clear').addEventListener('click', () => {
+      yamlInput.value = '';
+      yamlOutput.textContent = '';
+      lastYaml = '';
+      yamlDownload.disabled = true;
+      setYamlStatus('', '');
+      yamlInput.focus();
+    });
+    yamlDownload.addEventListener('click', () => {
+      if (!lastYaml) return;
+      const blob = new Blob([lastYaml + '\n'], { type: 'text/yaml;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'parsekit-export.yaml';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
   /* ---------------- GA4 tool usage events ---------------- */
-  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json']].forEach(([id, name]) => {
+  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml']].forEach(([id, name]) => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', () => {
