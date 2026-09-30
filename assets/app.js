@@ -365,8 +365,104 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------------- Base64 Encode / Decode ---------------- */
+  const b64Input = document.getElementById('b64-input');
+  if (b64Input) {
+    const b64Output = document.getElementById('b64-output');
+    const b64Status = document.getElementById('b64-status');
+    const b64UrlSafe = document.getElementById('b64-urlsafe');
+    let lastB64 = '';
+
+    const setB64Status = (message, kind) => {
+      b64Status.textContent = message;
+      b64Status.className = 'status-line' + (kind ? ' ' + kind : '');
+    };
+
+    const showB64 = (text) => {
+      lastB64 = text;
+      b64Output.textContent = text;
+    };
+
+    function encodeText(text, urlSafe) {
+      const bytes = new TextEncoder().encode(text);
+      let bin = '';
+      bytes.forEach((b) => { bin += String.fromCharCode(b); });
+      let out = btoa(bin);
+      if (urlSafe) out = out.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      return out;
+    }
+
+    function decodeText(b64) {
+      let s = b64.replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
+      const rem = s.length % 4;
+      if (rem === 1) throw new Error('the length is not valid for Base64');
+      if (rem) s += '='.repeat(4 - rem);
+      const bin = atob(s);
+      const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+      return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    }
+
+    document.getElementById('b64-encode').addEventListener('click', () => {
+      const raw = b64Input.value;
+      if (!raw) {
+        showB64('');
+        setB64Status('Type or paste some text to encode.', '');
+        return;
+      }
+      try {
+        showB64(encodeText(raw, b64UrlSafe.checked));
+        setB64Status('Encoded to Base64' + (b64UrlSafe.checked ? ' (URL-safe)' : '') + ' successfully.', 'ok');
+      } catch (err) {
+        showB64('');
+        setB64Status('Could not encode - ' + (err.message || 'unknown error.'), 'error');
+      }
+    });
+
+    document.getElementById('b64-decode').addEventListener('click', () => {
+      const raw = b64Input.value.trim();
+      if (!raw) {
+        showB64('');
+        setB64Status('Paste some Base64 to decode.', '');
+        return;
+      }
+      try {
+        showB64(decodeText(raw));
+        setB64Status('Decoded successfully.', 'ok');
+      } catch (err) {
+        showB64('');
+        setB64Status('Invalid Base64, or the result is not valid UTF-8 text.', 'error');
+      }
+    });
+
+    document.getElementById('b64-swap').addEventListener('click', () => {
+      if (!lastB64) return;
+      b64Input.value = lastB64;
+      showB64('');
+      setB64Status('Output moved to the input box.', 'ok');
+    });
+
+    document.getElementById('b64-sample').addEventListener('click', () => {
+      b64Input.value = 'Hello, Parsekit! 123';
+      showB64(encodeText(b64Input.value, b64UrlSafe.checked));
+      setB64Status('Sample loaded and encoded. Press Decode after using output as input to reverse it.', 'ok');
+    });
+
+    document.getElementById('b64-copy').addEventListener('click', () => {
+      if (!lastB64) return;
+      navigator.clipboard.writeText(lastB64);
+      setB64Status('Copied to clipboard.', 'ok');
+    });
+
+    document.getElementById('b64-clear').addEventListener('click', () => {
+      b64Input.value = '';
+      showB64('');
+      setB64Status('', '');
+      b64Input.focus();
+    });
+  }
+
   /* ---------------- GA4 tool usage events ---------------- */
-  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml']].forEach(([id, name]) => {
+  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml'], ['b64-encode', 'base64_encode'], ['b64-decode', 'base64_decode']].forEach(([id, name]) => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', () => {

@@ -31,4 +31,5 @@
     <priority>0.3</priority>
   </url>
   <url><loc>https://parsekit.net/json-to-yaml.html</loc></url>
+  <url><loc>https://parsekit.net/base64-encode-decode.html</loc></url>
 </urlset>
