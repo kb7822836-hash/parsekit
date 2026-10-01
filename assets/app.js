@@ -461,8 +461,138 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------------- JSON Diff ---------------- */
+  const diffA = document.getElementById('diff-a');
+  if (diffA) {
+    const diffB = document.getElementById('diff-b');
+    const diffOutput = document.getElementById('diff-output');
+    const diffStatus = document.getElementById('diff-status');
+    let lastDiff = '';
+
+    const setDiffStatus = (message, kind) => {
+      diffStatus.textContent = message;
+      diffStatus.className = 'status-line' + (kind ? ' ' + kind : '');
+    };
+
+    const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+    const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
+    function same(a, b) {
+      if (a === b) return true;
+      if (Array.isArray(a) && Array.isArray(b)) {
+        return a.length === b.length && a.every((x, i) => same(x, b[i]));
+      }
+      if (isObj(a) && isObj(b)) {
+        const ka = Object.keys(a);
+        const kb = Object.keys(b);
+        return ka.length === kb.length && ka.every((k) => has(b, k) && same(a[k], b[k]));
+      }
+      return false;
+    }
+
+    const keyPath = (path, k) => (/^[A-Za-z_$][\w$]*$/.test(k) ? path + '.' + k : path + '[' + JSON.stringify(k) + ']');
+
+    function walk(a, b, path, out) {
+      if (same(a, b)) return;
+      if (isObj(a) && isObj(b)) {
+        Object.keys(a).forEach((k) => {
+          const p = keyPath(path, k);
+          if (!has(b, k)) out.push({ t: 'del', p, v: a[k] });
+          else walk(a[k], b[k], p, out);
+        });
+        Object.keys(b).forEach((k) => {
+          if (!has(a, k)) out.push({ t: 'add', p: keyPath(path, k), v: b[k] });
+        });
+        return;
+      }
+      if (Array.isArray(a) && Array.isArray(b)) {
+        const n = Math.max(a.length, b.length);
+        for (let i = 0; i < n; i++) {
+          const p = path + '[' + i + ']';
+          if (i >= a.length) out.push({ t: 'add', p, v: b[i] });
+          else if (i >= b.length) out.push({ t: 'del', p, v: a[i] });
+          else walk(a[i], b[i], p, out);
+        }
+        return;
+      }
+      out.push({ t: 'chg', p: path, from: a, to: b });
+    }
+
+    function short(v) {
+      let s = JSON.stringify(v);
+      if (s === undefined) s = 'undefined';
+      return s.length > 120 ? s.slice(0, 117) + '...' : s;
+    }
+
+    function runDiff() {
+      const rawA = diffA.value.trim();
+      const rawB = diffB.value.trim();
+      diffOutput.textContent = '';
+      lastDiff = '';
+      if (!rawA || !rawB) {
+        setDiffStatus('Paste JSON into both panels.', '');
+        return;
+      }
+      let a, b;
+      try { a = JSON.parse(rawA); } catch (err) {
+        setDiffStatus('Left JSON is invalid - ' + (err.message || 'could not parse.'), 'error');
+        return;
+      }
+      try { b = JSON.parse(rawB); } catch (err) {
+        setDiffStatus('Right JSON is invalid - ' + (err.message || 'could not parse.'), 'error');
+        return;
+      }
+      const out = [];
+      walk(a, b, '$', out);
+      if (!out.length) {
+        setDiffStatus('No differences - both JSON documents are identical.', 'ok');
+        return;
+      }
+      const lines = [];
+      out.forEach((d) => {
+        const text = d.t === 'add' ? '+ ' + d.p + ': ' + short(d.v)
+          : d.t === 'del' ? '- ' + d.p + ': ' + short(d.v)
+          : '~ ' + d.p + ': ' + short(d.from) + ' \u2192 ' + short(d.to);
+        const line = document.createElement('span');
+        line.className = 'diff-line diff-' + d.t;
+        line.textContent = text;
+        diffOutput.appendChild(line);
+        lines.push(text);
+      });
+      lastDiff = lines.join('\n');
+      const count = (t) => out.filter((d) => d.t === t).length;
+      setDiffStatus(out.length + ' difference' + (out.length === 1 ? '' : 's') + ': ' + count('add') + ' added, ' + count('del') + ' removed, ' + count('chg') + ' changed.', 'ok');
+    }
+
+    document.getElementById('diff-run').addEventListener('click', runDiff);
+    document.getElementById('diff-swap').addEventListener('click', () => {
+      const t = diffA.value;
+      diffA.value = diffB.value;
+      diffB.value = t;
+      if (diffA.value.trim() && diffB.value.trim()) runDiff();
+    });
+    document.getElementById('diff-sample').addEventListener('click', () => {
+      diffA.value = '{"name":"Ali","age":24,"roles":["admin","editor"],"city":"Jhelum"}';
+      diffB.value = '{"name":"Ali","age":25,"roles":["admin"],"country":"PK"}';
+      runDiff();
+    });
+    document.getElementById('diff-copy').addEventListener('click', () => {
+      if (!lastDiff) return;
+      navigator.clipboard.writeText(lastDiff);
+      setDiffStatus('Copied to clipboard.', 'ok');
+    });
+    document.getElementById('diff-clear').addEventListener('click', () => {
+      diffA.value = '';
+      diffB.value = '';
+      diffOutput.textContent = '';
+      lastDiff = '';
+      setDiffStatus('', '');
+      diffA.focus();
+    });
+  }
+
   /* ---------------- GA4 tool usage events ---------------- */
-  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml'], ['b64-encode', 'base64_encode'], ['b64-decode', 'base64_decode']].forEach(([id, name]) => {
+  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml'], ['b64-encode', 'base64_encode'], ['b64-decode', 'base64_decode'], ['diff-run', 'json_diff']].forEach(([id, name]) => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', () => {

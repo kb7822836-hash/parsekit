@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Diff - Compare Two JSON Files Online | Parsekit</title>
+<meta name="description" content="Compare two JSON documents and see what was added, removed or changed, with the exact path of each difference. Free, no signup, runs in your browser.">
+<link rel="canonical" href="https://parsekit.net/json-diff.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html" aria-current="page">JSON Diff</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">// tool 06</p>
+    <h1>JSON Diff</h1>
+    <p>Compare two JSON documents and see exactly what was added, removed or changed. Runs entirely in your browser, nothing you paste is uploaded anywhere.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="workbench diff-inputs">
+    <div class="panel">
+      <div class="panel-label"><span>ORIGINAL (LEFT)</span></div>
+      <textarea id="diff-a" spellcheck="false" placeholder='{"paste":"the original JSON"}'></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-label"><span>MODIFIED (RIGHT)</span></div>
+      <textarea id="diff-b" spellcheck="false" placeholder='{"paste":"the changed JSON"}'></textarea>
+    </div>
+  </div>
+
+  <div class="controls-row">
+    <button class="btn accent" id="diff-run">Compare</button>
+    <button class="btn secondary" id="diff-swap">Swap sides</button>
+    <button class="btn secondary" id="diff-sample">Load sample</button>
+    <button class="btn secondary" id="diff-copy">Copy result</button>
+    <button class="btn secondary" id="diff-clear">Clear</button>
+  </div>
+  <div id="diff-status" class="status-line"></div>
+
+  <div class="panel" style="margin-top:12px;">
+    <div class="panel-label"><span>DIFFERENCES</span><span>+ added &nbsp; - removed &nbsp; ~ changed</span></div>
+    <pre id="diff-output" class="output-box"></pre>
+  </div>
+
+  <div class="helper-copy">
+    <h2>What is a JSON diff?</h2>
+    <p>A JSON diff compares two JSON documents and lists the differences between them. It is useful for checking what changed between two API responses, two versions of a config file, or a test result and its expected value.</p>
+    <h3>How to use it</h3>
+    <p>Paste the original JSON on the left and the changed JSON on the right, then press Compare. Each difference is shown with its path, for example $.user.age, so you can find it quickly.</p>
+    <h3>How are arrays compared?</h3>
+    <p>Arrays are compared position by position. If an item is inserted at the start of an array, the items after it will show as changed. Object keys are compared by name, so the order of keys does not matter.</p>
+    <h3>Is my data safe?</h3>
+    <p>Yes. The comparison happens in your browser with JavaScript. Nothing is sent to a server.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser - nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js"></script>
+</body>
+</html>

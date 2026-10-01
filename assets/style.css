@@ -453,3 +453,12 @@ footer.site-footer {
 }
 
 .tool-card { border: 1px solid var(--steel-line); }
+
+/* ---------- JSON Diff ---------- */
+
+.diff-inputs textarea { min-height: 200px; }
+#diff-output { min-height: 140px; }
+.diff-line { display: block; }
+.diff-add { color: #1E7A4C; }
+.diff-del { color: var(--danger); }
+.diff-chg { color: #9A6A12; }
