@@ -591,8 +591,88 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------------- URL Encode / Decode ---------------- */
+  const urlInput = document.getElementById('url-input');
+  if (urlInput) {
+    const urlOutput = document.getElementById('url-output');
+    const urlStatus = document.getElementById('url-status');
+    const urlMode = document.getElementById('url-mode');
+    const urlPlus = document.getElementById('url-plus');
+    let lastUrl = '';
+
+    const setUrlStatus = (message, kind) => {
+      urlStatus.textContent = message;
+      urlStatus.className = 'status-line' + (kind ? ' ' + kind : '');
+    };
+
+    const showUrl = (text) => {
+      lastUrl = text;
+      urlOutput.textContent = text;
+    };
+
+    document.getElementById('url-encode').addEventListener('click', () => {
+      const raw = urlInput.value;
+      if (!raw) {
+        showUrl('');
+        setUrlStatus('Type or paste some text to encode.', '');
+        return;
+      }
+      try {
+        showUrl(urlMode.value === 'full' ? encodeURI(raw) : encodeURIComponent(raw));
+        setUrlStatus('Encoded successfully (' + (urlMode.value === 'full' ? 'full URL' : 'component') + ' mode).', 'ok');
+      } catch (err) {
+        showUrl('');
+        setUrlStatus('Could not encode - the text contains an invalid character sequence.', 'error');
+      }
+    });
+
+    document.getElementById('url-decode').addEventListener('click', () => {
+      let raw = urlInput.value.trim();
+      if (!raw) {
+        showUrl('');
+        setUrlStatus('Paste a percent-encoded string to decode.', '');
+        return;
+      }
+      if (urlPlus.checked) raw = raw.replace(/\+/g, ' ');
+      try {
+        showUrl(urlMode.value === 'full' ? decodeURI(raw) : decodeURIComponent(raw));
+        setUrlStatus('Decoded successfully.', 'ok');
+      } catch (err) {
+        showUrl('');
+        setUrlStatus('Invalid input - a % sign is not followed by two hex digits, or the bytes are not valid UTF-8.', 'error');
+      }
+    });
+
+    document.getElementById('url-swap').addEventListener('click', () => {
+      if (!lastUrl) return;
+      urlInput.value = lastUrl;
+      showUrl('');
+      setUrlStatus('Output moved to the input box.', 'ok');
+    });
+
+    document.getElementById('url-sample').addEventListener('click', () => {
+      urlInput.value = 'name=Ali Khan&city=Jhelum/Punjab?x=1';
+      urlMode.value = 'component';
+      showUrl(encodeURIComponent(urlInput.value));
+      setUrlStatus('Sample loaded and encoded. Use output as input, then press Decode to reverse it.', 'ok');
+    });
+
+    document.getElementById('url-copy').addEventListener('click', () => {
+      if (!lastUrl) return;
+      navigator.clipboard.writeText(lastUrl);
+      setUrlStatus('Copied to clipboard.', 'ok');
+    });
+
+    document.getElementById('url-clear').addEventListener('click', () => {
+      urlInput.value = '';
+      showUrl('');
+      setUrlStatus('', '');
+      urlInput.focus();
+    });
+  }
+
   /* ---------------- GA4 tool usage events ---------------- */
-  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml'], ['b64-encode', 'base64_encode'], ['b64-decode', 'base64_decode'], ['diff-run', 'json_diff']].forEach(([id, name]) => {
+  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml'], ['b64-encode', 'base64_encode'], ['b64-decode', 'base64_decode'], ['diff-run', 'json_diff'], ['url-encode', 'url_encode'], ['url-decode', 'url_decode']].forEach(([id, name]) => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', () => {
