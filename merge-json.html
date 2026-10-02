@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Merge JSON Files Online — Free Tool | Parsekit</title>
-<meta name="description" content="Merge two JSON objects or arrays into one. Deep merge for objects, concatenation for arrays. Free, no signup, runs entirely in your browser.">
+<title>Merge JSON Files Online (Free, No Upload) | Parsekit</title>
+<meta name="description" content="Merge or combine two JSON files online. Deep merge for objects, concatenation for arrays. Free, no signup, and nothing is uploaded - it runs in your browser.">
 <link rel="canonical" href="https://parsekit.net/merge-json.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any (runs in browser)",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Merge two JSON objects or arrays into one. Deep merge for objects, concatenation for arrays. Free, no signup, runs entirely in your browser."
+  "description": "Merge or combine two JSON files online. Deep merge for objects, concatenation for arrays. Free, no signup, runs entirely in your browser."
 }
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
@@ -53,8 +53,8 @@
 <div class="page-header">
   <div class="page-header-inner">
     <p class="kicker">tool 03 / merge</p>
-    <h1>Merge JSON Files</h1>
-    <p>Paste two JSON objects — or two JSON arrays — into the panels below. Parsekit combines them into a single result: a deep merge for objects (matching keys are combined, conflicts are won by the second panel), or a concatenation for arrays.</p>
+    <h1>Merge JSON Files Online</h1>
+    <p>Combine two JSON files into one. Open each file in any text editor, copy its contents, and paste them into the two panels below. Parsekit does a deep merge for objects (matching keys are combined, and conflicts are won by the second panel) or joins two arrays end to end. Everything runs in your browser, so nothing is uploaded.</p>
   </div>
 </div>
 
@@ -63,7 +63,7 @@
     <button class="btn accent" id="merge-run">Merge</button>
     <button class="btn secondary" id="merge-download" disabled>Download .json</button>
     <button class="btn secondary" id="merge-sample">Load sample</button>
-  <button class="btn secondary" id="merge-clear">Clear</button>
+    <button class="btn secondary" id="merge-clear">Clear</button>
   </div>
 
   <div class="workbench">
@@ -84,10 +84,24 @@
   <p class="status-line" id="merge-status"></p>
 
   <div class="helper-copy">
+    <h2>How to merge two JSON files</h2>
+    <p>Open both files in a text editor, copy the first file's contents into panel A and the second file's contents into panel B, then press Merge. The combined JSON appears in the result box, and you can copy it or download it as a .json file.</p>
+
     <h2>How the merge works</h2>
     <p>If both inputs are objects, Parsekit merges them key by key. When a key holds another object on both sides, it merges those nested objects too, going as deep as needed. When a key's value is a plain value or an array on either side, the value from JSON B replaces the one from JSON A.</p>
-    <h2>Arrays</h2>
-    <p>If both inputs are arrays instead of objects, they're joined end to end into one longer array — nothing is deduplicated, so repeated items are kept.</p>
+
+    <h3>Example: merging two objects</h3>
+    <p>JSON A:</p>
+    <pre class="output-box">{"user":{"name":"Ali","age":24}}</pre>
+    <p>JSON B:</p>
+    <pre class="output-box">{"user":{"age":25,"city":"Jhelum"}}</pre>
+    <p>Merged result:</p>
+    <pre class="output-box">{"user":{"name":"Ali","age":25,"city":"Jhelum"}}</pre>
+    <p>The nested user objects were combined. The age conflict was won by JSON B, and the name and city were both kept.</p>
+
+    <h2>Combining JSON arrays</h2>
+    <p>If both inputs are arrays instead of objects, they are joined end to end into one longer array. Nothing is deduplicated, so repeated items are kept.</p>
+    <p>For example, combining <code>[1,2]</code> and <code>[2,3]</code> gives <code>[1,2,2,3]</code>.</p>
 
     <h2>Frequently asked questions</h2>
     <h3>What happens when both files have the same key?</h3>
@@ -95,7 +109,22 @@
     <h3>Can I merge more than two files?</h3>
     <p>This tool merges two inputs at a time. To combine three or more, merge the first two, then paste that result back into panel A along with the third file in panel B, and repeat.</p>
     <h3>What if one file is an array and the other is an object?</h3>
-    <p>Both inputs need to be the same shape — two objects, or two arrays. If they don't match, the tool shows an error instead of guessing how to combine them.</p>
+    <p>Both inputs need to be the same shape: two objects, or two arrays. If they don't match, the tool shows an error instead of guessing how to combine them.</p>
+    <h3>Are my JSON files uploaded to a server?</h3>
+    <p>No. The merge runs entirely in your browser with JavaScript. Nothing you paste leaves your device, so it is safe to use with private or sensitive data.</p>
+    <h3>Does merging remove duplicate items from arrays?</h3>
+    <p>No. Arrays are joined as they are, and repeated items are kept. If you need unique values only, remove the duplicates from the result afterwards.</p>
+    <h3>Is this JSON merge tool free?</h3>
+    <p>Yes. It is free, needs no signup, and has no usage limits.</p>
+    <h3>How do I check what changed after merging?</h3>
+    <p>Use the <a href="/json-diff.html">JSON Diff tool</a> to compare the original file with the merged result and see exactly which keys were added or changed.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      <a href="/json-formatter.html">Format and validate JSON</a> before merging, to catch syntax errors.
+      Use <a href="/json-diff.html">JSON Diff</a> to compare two JSON files.
+      Convert the merged result with <a href="/json-to-csv.html">JSON to CSV</a> or <a href="/json-to-yaml.html">JSON to YAML</a>.
+    </p>
   </div>
 </main>
 
@@ -117,17 +146,37 @@
     {
       "@type": "Question",
       "name": "What if one file is an array and the other is an object?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Both inputs need to be the same shape — two objects, or two arrays. If they don't match, the tool shows an error instead of guessing." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Both inputs need to be the same shape: two objects, or two arrays. If they don't match, the tool shows an error instead of guessing." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my JSON files uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The merge runs entirely in your browser with JavaScript. Nothing you paste leaves your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does merging remove duplicate items from arrays?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Arrays are joined as they are, and repeated items are kept." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this JSON merge tool free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is free, needs no signup, and has no usage limits." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I check what changed after merging?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Use the JSON Diff tool to compare the original file with the merged result and see exactly which keys were added or changed." }
     }
   ]
 }
 </script>
 
-<div class="ad-slot"><div class="ad-slot-inner">Ad placement — in-content (below tool, above footer)</div></div>
+<div class="ad-slot"><div class="ad-slot-inner">Ad placement &mdash; in-content (below tool, above footer)</div></div>
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>© <span id="year"></span> Parsekit. Everything runs locally in your browser — nothing you paste is uploaded anywhere.</span>
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
     <nav>
       <a href="/about.html">About</a>
       <a href="/privacy.html">Privacy Policy</a>
@@ -138,4 +187,3 @@
 <script src="/assets/app.js"></script>
 </body>
 </html>
-
