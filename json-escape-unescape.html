@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Escape and Unescape Online (Free, No Upload) | Parsekit</title>
+<meta name="description" content="Escape text into a valid JSON string, or unescape a JSON string back to plain text. Handles quotes, newlines and unicode. Free, and nothing is uploaded.">
+<link rel="canonical" href="https://parsekit.net/json-escape-unescape.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JSON Escape and Unescape",
+  "url": "https://parsekit.net/json-escape-unescape.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Escape text into a valid JSON string, or unescape a JSON string back to plain text. Free, no signup, runs entirely in your browser."
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">tool 09 / escape</p>
+    <h1>JSON Escape and Unescape</h1>
+    <p>Turn any text into a safe JSON string, or turn an escaped JSON string back into plain text. Paste your text below and press Escape or Unescape. Quotes, backslashes, newlines and tabs are handled for you. Everything runs in your browser, so nothing is uploaded.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="controls-row">
+    <button class="btn accent" id="esc-escape">Escape</button>
+    <button class="btn accent" id="esc-unescape">Unescape</button>
+    <button class="btn secondary" id="esc-swap">Use output as input</button>
+    <button class="btn secondary" id="esc-copy">Copy output</button>
+    <button class="btn secondary" id="esc-sample">Load sample</button>
+    <button class="btn secondary" id="esc-clear">Clear</button>
+  </div>
+
+  <div class="controls-row">
+    <label style="font-size:13px;"><input type="checkbox" id="esc-quotes" checked> Wrap result in quotes (Escape)</label>
+    <label style="font-size:13px;margin-left:16px;"><input type="checkbox" id="esc-ascii"> Escape non-ASCII characters as \uXXXX</label>
+  </div>
+
+  <div class="workbench">
+    <div class="panel">
+      <div class="panel-label"><span>input</span></div>
+      <textarea id="esc-input" spellcheck="false" placeholder='{"name": "Ali", "city": "Jhelum"}'></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-label"><span>output</span></div>
+      <pre class="output-box" id="esc-output"></pre>
+    </div>
+  </div>
+  <p class="status-line" id="esc-status"></p>
+
+  <div class="helper-copy">
+    <h2>How to escape a JSON string</h2>
+    <p>Paste your text into the input box and press Escape. Characters that are not allowed inside a JSON string are replaced with escape sequences: a double quote becomes <code>\"</code>, a backslash becomes <code>\\</code>, a new line becomes <code>\n</code>, and a tab becomes <code>\t</code>. This is what you need when you want to put JSON, code or multi-line text inside another JSON value.</p>
+
+    <h3>Example: escaping JSON text</h3>
+    <p>Input:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{"name": "Ali"}</pre>
+    <p>Escaped result:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">"{\"name\": \"Ali\"}"</pre>
+
+    <h2>How to unescape a JSON string</h2>
+    <p>Paste an escaped string, with or without the surrounding quotes, and press Unescape. Sequences such as <code>\"</code>, <code>\n</code> and <code>\u00e9</code> are converted back to the real characters. If the result is itself valid JSON, the tool tells you, so you can copy it into the <a href="/json-formatter.html">JSON Formatter</a> to read it easily.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>Which characters are escaped in a JSON string?</h3>
+    <p>Double quotes, backslashes, and control characters such as new lines, tabs and carriage returns. Optionally, all non-ASCII characters can be written as \uXXXX sequences.</p>
+    <h3>Should I keep the surrounding quotes?</h3>
+    <p>Keep them if you are pasting the result as a complete JSON string value. Turn the option off if you only want the escaped inside, for example to place it between quotes you already have.</p>
+    <h3>Why do I get an error when unescaping?</h3>
+    <p>Usually the text contains a double quote that is not escaped, or a backslash that is not followed by a valid escape character. Fix those characters and try again.</p>
+    <h3>Is my text uploaded to a server?</h3>
+    <p>No. Everything runs in your browser with JavaScript, so it is safe to use with private data.</p>
+    <h3>Is this tool free?</h3>
+    <p>Yes. It is free, needs no signup, and has no usage limits.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      Check the result with the <a href="/json-formatter.html">JSON Formatter</a>.
+      Compare two versions with <a href="/json-diff.html">JSON Diff</a>.
+      Encode text with <a href="/base64-encode-decode.html">Base64</a> or <a href="/url-encode-decode.html">URL Encode</a>.
+    </p>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Which characters are escaped in a JSON string?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Double quotes, backslashes, and control characters such as new lines, tabs and carriage returns. Optionally, all non-ASCII characters can be written as unicode escape sequences." }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I keep the surrounding quotes?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Keep them if you are pasting the result as a complete JSON string value. Turn the option off if you only want the escaped inside." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do I get an error when unescaping?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Usually the text contains a double quote that is not escaped, or a backslash that is not followed by a valid escape character." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my text uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Everything runs in your browser with JavaScript, so it is safe to use with private data." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this tool free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is free, needs no signup, and has no usage limits." }
+    }
+  ]
+}
+</script>
+
+<div class="ad-slot"><div class="ad-slot-inner">Ad placement &mdash; in-content (below tool, above footer)</div></div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+
+  var inp = document.getElementById('esc-input');
+  var out = document.getElementById('esc-output');
+  var status = document.getElementById('esc-status');
+  var quotesCb = document.getElementById('esc-quotes');
+  var asciiCb = document.getElementById('esc-ascii');
+
+  function setStatus(msg, isErr) {
+    status.textContent = msg;
+    status.style.color = isErr ? '#b3261e' : '';
+  }
+
+  function track() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'tool_use', { tool_name: 'json-escape-unescape', page_path: location.pathname });
+    }
+  }
+
+  function doEscape() {
+    var s = inp.value;
+    if (!s) { out.textContent = ''; setStatus('Paste some text first.', true); return; }
+    var r = JSON.stringify(s);
+    if (!quotesCb.checked) r = r.slice(1, -1);
+    if (asciiCb.checked) {
+      r = r.replace(/[\u0080-\uFFFF]/g, function (c) {
+        return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
+      });
+    }
+    out.textContent = r;
+    setStatus('Escaped ' + s.length + ' characters.', false);
+    track();
+  }
+
+  function doUnescape() {
+    var s = inp.value.trim();
+    if (!s) { out.textContent = ''; setStatus('Paste some text first.', true); return; }
+    var body = s;
+    if (body.length >= 2 && body.charAt(0) === '"' && body.charAt(body.length - 1) === '"') {
+      body = body.slice(1, -1);
+    }
+    body = body.replace(/\r?\n/g, '\\n').replace(/\t/g, '\\t');
+    var r;
+    try {
+      r = JSON.parse('"' + body + '"');
+    } catch (e) {
+      out.textContent = '';
+      setStatus('Could not unescape. Check for a double quote that is not escaped, or an invalid backslash sequence.', true);
+      return;
+    }
+    out.textContent = r;
+    var note = '';
+    var t = r.trim();
+    if (t.charAt(0) === '{' || t.charAt(0) === '[') {
+      try { JSON.parse(t); note = ' The result is valid JSON.'; } catch (e2) {}
+    }
+    setStatus('Unescaped successfully.' + note, false);
+    track();
+  }
+
+  document.getElementById('esc-escape').addEventListener('click', doEscape);
+  document.getElementById('esc-unescape').addEventListener('click', doUnescape);
+
+  document.getElementById('esc-swap').addEventListener('click', function () {
+    if (!out.textContent) { setStatus('There is no output to move yet.', true); return; }
+    inp.value = out.textContent;
+    out.textContent = '';
+    setStatus('', false);
+  });
+
+  document.getElementById('esc-copy').addEventListener('click', function () {
+    var text = out.textContent;
+    if (!text) { setStatus('There is no output to copy yet.', true); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function () { setStatus('Copied to clipboard.', false); },
+        function () { setStatus('Copy failed. Select the output and copy it manually.', true); }
+      );
+    } else {
+      setStatus('Copy is not available in this browser. Select the output and copy it manually.', true);
+    }
+  });
+
+  document.getElementById('esc-sample').addEventListener('click', function () {
+    inp.value = '{"name": "Ali", "city": "Jhelum", "note": "He said \\"hello\\""}';
+    out.textContent = '';
+    setStatus('', false);
+  });
+
+  document.getElementById('esc-clear').addEventListener('click', function () {
+    inp.value = '';
+    out.textContent = '';
+    setStatus('', false);
+  });
+})();
+</script>
+</body>
+</html>
