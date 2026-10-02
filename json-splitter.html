@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split JSON File Online (Free, No Upload) | Parsekit</title>
+<meta name="description" content="Split a large JSON array or object into smaller JSON files online. Choose how many items per part, then copy or download each part. Free, and nothing is uploaded.">
+<link rel="canonical" href="https://parsekit.net/json-splitter.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JSON Splitter",
+  "url": "https://parsekit.net/json-splitter.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Split a large JSON array or object into smaller JSON parts online. Free, no signup, runs entirely in your browser."
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">tool 08 / split</p>
+    <h1>Split JSON File Online</h1>
+    <p>Break a large JSON file into smaller parts. Open the file in a text editor, copy its contents, paste them below, and choose how many items each part should hold. Arrays are split by items, and objects are split by keys. Everything runs in your browser, so nothing is uploaded.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="controls-row">
+    <button class="btn accent" id="split-run">Split</button>
+    <button class="btn secondary" id="split-sample">Load sample</button>
+    <button class="btn secondary" id="split-clear">Clear</button>
+    <label for="split-size" style="margin-left:12px;font-size:13px;">Items per part:</label>
+    <input type="number" id="split-size" value="3" min="1" step="1" style="width:80px;padding:6px 8px;font-size:14px;">
+  </div>
+
+  <div class="panel" style="margin-bottom: 16px;">
+    <div class="panel-label"><span>JSON input (array or object)</span></div>
+    <textarea id="split-input" spellcheck="false" placeholder='[{"id":1},{"id":2},{"id":3},{"id":4}]'></textarea>
+  </div>
+
+  <p class="status-line" id="split-status"></p>
+  <div id="split-parts"></div>
+
+  <div class="helper-copy">
+    <h2>How to split a JSON file</h2>
+    <p>Copy the contents of your JSON file into the input box, set how many items you want in each part, and press Split. Each part appears below with its own Copy and Download buttons, so you can save the pieces as separate .json files.</p>
+
+    <h2>How the split works</h2>
+    <p>If the input is an array, it is cut into groups of the size you choose, in the original order. If the input is an object, its top-level keys are divided into groups, and each part is a smaller object holding those keys. The last part may hold fewer items than the others.</p>
+
+    <h3>Example: splitting an array</h3>
+    <p>Input:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">[1,2,3,4,5]</pre>
+    <p>With 2 items per part, you get three parts:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">[1,2]   [3,4]   [5]</pre>
+
+    <h2>Frequently asked questions</h2>
+    <h3>Is my JSON uploaded to a server?</h3>
+    <p>No. The split runs entirely in your browser with JavaScript. Nothing you paste leaves your device, so it is safe to use with private data.</p>
+    <h3>Can I split a JSON object, not just an array?</h3>
+    <p>Yes. For an object, the top-level keys are divided into groups and each part is a smaller object with those keys.</p>
+    <h3>Does splitting change my data?</h3>
+    <p>No. Items keep their original order and values. Each part is formatted with two-space indentation, which only changes whitespace.</p>
+    <h3>How big a file can I split?</h3>
+    <p>It depends on your browser and device, since everything is processed locally. Files of a few megabytes work fine. Very large files may be slow to paste into the box.</p>
+    <h3>Can I download all the parts at once?</h3>
+    <p>Each part has its own Download button. Browsers restrict many simultaneous downloads, so the parts are saved one at a time.</p>
+    <h3>How do I put the parts back together?</h3>
+    <p>Use the <a href="/merge-json.html">Merge JSON tool</a>. For arrays, merging two parts joins them end to end again.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      <a href="/json-formatter.html">Format and validate JSON</a> before splitting, to catch syntax errors.
+      Use <a href="/merge-json.html">Merge JSON</a> to combine files again.
+      Convert a part with <a href="/json-to-csv.html">JSON to CSV</a> or <a href="/json-to-yaml.html">JSON to YAML</a>.
+    </p>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my JSON uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The split runs entirely in your browser with JavaScript. Nothing you paste leaves your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split a JSON object, not just an array?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. For an object, the top-level keys are divided into groups and each part is a smaller object with those keys." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does splitting change my data?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Items keep their original order and values. Each part is formatted with two-space indentation, which only changes whitespace." }
+    },
+    {
+      "@type": "Question",
+      "name": "How big a file can I split?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It depends on your browser and device, since everything is processed locally. Files of a few megabytes work fine." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download all the parts at once?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Each part has its own Download button. Browsers restrict many simultaneous downloads, so the parts are saved one at a time." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I put the parts back together?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Use the Merge JSON tool. For arrays, merging two parts joins them end to end again." }
+    }
+  ]
+}
+</script>
+
+<div class="ad-slot"><div class="ad-slot-inner">Ad placement &mdash; in-content (below tool, above footer)</div></div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+
+  var inp = document.getElementById('split-input');
+  var size = document.getElementById('split-size');
+  var out = document.getElementById('split-parts');
+  var status = document.getElementById('split-status');
+  var MAX_PARTS = 200;
+
+  function setStatus(msg, isErr) {
+    status.textContent = msg;
+    status.style.color = isErr ? '#b3261e' : '';
+  }
+
+  function track() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'tool_use', { tool_name: 'json-splitter', page_path: location.pathname });
+    }
+  }
+
+  function download(name, text) {
+    var blob = new Blob([text], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  function copyText(text, btn) {
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = old; }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { setStatus('Copy failed. Select the text and copy it manually.', true); });
+    } else {
+      setStatus('Copy is not available in this browser. Select the text and copy it manually.', true);
+    }
+  }
+
+  function renderPart(index, label, text) {
+    var wrap = document.createElement('div');
+    wrap.className = 'panel';
+    wrap.style.marginBottom = '12px';
+
+    var head = document.createElement('div');
+    head.className = 'panel-label';
+    var span = document.createElement('span');
+    span.textContent = 'part ' + index + ' - ' + label;
+    head.appendChild(span);
+    wrap.appendChild(head);
+
+    var bar = document.createElement('div');
+    bar.className = 'controls-row';
+    bar.style.padding = '8px';
+
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'btn secondary';
+    copyBtn.textContent = 'Copy';
+    copyBtn.addEventListener('click', function () { copyText(text, copyBtn); });
+
+    var dlBtn = document.createElement('button');
+    dlBtn.className = 'btn secondary';
+    dlBtn.textContent = 'Download part-' + index + '.json';
+    dlBtn.addEventListener('click', function () { download('part-' + index + '.json', text); });
+
+    bar.appendChild(copyBtn);
+    bar.appendChild(dlBtn);
+    wrap.appendChild(bar);
+
+    var pre = document.createElement('pre');
+    pre.style.cssText = 'min-height:0;height:auto;max-height:260px;resize:none;margin:0;padding:10px 12px;background:#fff;border-top:1px solid #c9c9c9;overflow:auto;';
+    pre.textContent = text;
+    wrap.appendChild(pre);
+
+    out.appendChild(wrap);
+  }
+
+  function runSplit() {
+    out.innerHTML = '';
+    setStatus('', false);
+
+    var raw = inp.value.trim();
+    if (!raw) { setStatus('Paste some JSON first.', true); return; }
+
+    var n = parseInt(size.value, 10);
+    if (!n || n < 1) { setStatus('Items per part must be 1 or more.', true); return; }
+
+    var data;
+    try { data = JSON.parse(raw); }
+    catch (e) { setStatus('Invalid JSON: ' + e.message, true); return; }
+
+    var parts = [];
+    var unit;
+    var i;
+
+    if (Array.isArray(data)) {
+      if (data.length === 0) { setStatus('The array is empty, so there is nothing to split.', true); return; }
+      unit = 'items';
+      for (i = 0; i < data.length; i += n) {
+        parts.push({ value: data.slice(i, i + n), from: i + 1, to: Math.min(i + n, data.length) });
+      }
+    } else if (data !== null && typeof data === 'object') {
+      var keys = Object.keys(data);
+      if (keys.length === 0) { setStatus('The object is empty, so there is nothing to split.', true); return; }
+      unit = 'keys';
+      for (i = 0; i < keys.length; i += n) {
+        var chunk = {};
+        keys.slice(i, i + n).forEach(function (k) { chunk[k] = data[k]; });
+        parts.push({ value: chunk, from: i + 1, to: Math.min(i + n, keys.length) });
+      }
+    } else {
+      setStatus('Input must be a JSON array or object.', true);
+      return;
+    }
+
+    if (parts.length > MAX_PARTS) {
+      setStatus('That would create ' + parts.length + ' parts. Increase items per part so there are at most ' + MAX_PARTS + '.', true);
+      return;
+    }
+
+    parts.forEach(function (p, idx) {
+      renderPart(idx + 1, unit + ' ' + p.from + '-' + p.to, JSON.stringify(p.value, null, 2));
+    });
+
+    setStatus('Split into ' + parts.length + ' part' + (parts.length === 1 ? '' : 's') + '.', false);
+    track();
+  }
+
+  document.getElementById('split-run').addEventListener('click', runSplit);
+
+  document.getElementById('split-sample').addEventListener('click', function () {
+    inp.value = JSON.stringify([
+      { id: 1, name: 'Ali' }, { id: 2, name: 'Sara' }, { id: 3, name: 'Omar' },
+      { id: 4, name: 'Hina' }, { id: 5, name: 'Zain' }, { id: 6, name: 'Maya' },
+      { id: 7, name: 'Bilal' }
+    ], null, 2);
+    size.value = 3;
+    out.innerHTML = '';
+    setStatus('', false);
+  });
+  document.getElementById('split-clear').addEventListener('click', function () {
+    inp.value = '';
+    out.innerHTML = '';
+    setStatus('', false);
+  });
+})();
+</script>
+</body>
+</html>
