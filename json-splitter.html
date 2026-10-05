@@ -88,6 +88,11 @@
     <p>With 2 items per part, you get three parts:</p>
     <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">[1,2]   [3,4]   [5]</pre>
 
+    <h2>Splitting JSON for LLMs and AI tools</h2>
+    <p>Large JSON files often do not fit into the context window of an AI model, and very long pasted data can make answers less reliable. A common fix is to split the data into smaller parts and work through them one at a time.</p>
+    <p>Choose a number of items per part that keeps each part small enough for your model, split, and then paste or send the parts one by one. Every part is valid JSON on its own, so the model can read it without extra cleanup. As a very rough rule, one token is about four characters of English text, but JSON with many short keys and numbers often uses more tokens, so start with a smaller part size and check.</p>
+    <p>This tool splits by the number of items or keys, not by token count. The splitting itself happens in your browser, but anything you then paste into an AI service is sent to that service, so remove private fields first.</p>
+
     <h2>Frequently asked questions</h2>
     <h3>Is my JSON uploaded to a server?</h3>
     <p>No. The split runs entirely in your browser with JavaScript. Nothing you paste leaves your device, so it is safe to use with private data.</p>
@@ -101,6 +106,13 @@
     <p>Each part has its own Download button. Browsers restrict many simultaneous downloads, so the parts are saved one at a time.</p>
     <h3>How do I put the parts back together?</h3>
     <p>Use the <a href="/merge-json.html">Merge JSON tool</a>. For arrays, merging two parts joins them end to end again.</p>
+
+    <h3>Can I split JSON to fit an LLM context window?</h3>
+    <p>Yes. Pick a smaller number of items per part, split, and use the parts one at a time. Each part is valid JSON by itself.</p>
+    <h3>Does the splitter count tokens?</h3>
+    <p>No. It splits by the number of items or keys. Token counts depend on the model, so check the size of a part and adjust the part size if needed.</p>
+    <h3>Is my data sent anywhere when I split it?</h3>
+    <p>No, splitting runs in your browser. If you then paste a part into an AI service, that part is sent to the service, so remove private fields first.</p>
 
     <h2>Related tools</h2>
     <p>
@@ -145,6 +157,21 @@
       "@type": "Question",
       "name": "How do I put the parts back together?",
       "acceptedAnswer": { "@type": "Answer", "text": "Use the Merge JSON tool. For arrays, merging two parts joins them end to end again." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split JSON to fit an LLM context window?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Pick a smaller number of items per part, split, and use the parts one at a time. Each part is valid JSON by itself." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the splitter count tokens?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. It splits by the number of items or keys. Token counts depend on the model, so check the size of a part and adjust the part size if needed." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data sent anywhere when I split it?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, splitting runs in your browser. If you then paste a part into an AI service, that part is sent to the service, so remove private fields first." }
     }
   ]
 }
