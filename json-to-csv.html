@@ -84,6 +84,15 @@
   <div class="helper-copy">
     <h2>What this tool does</h2>
     <p>Spreadsheets need flat rows and columns; JSON is nested key-value data. This tool reads every object in your array, collects every field name it finds across all of them, and lays them out as CSV columns — filling in a blank where a particular object doesn't have that field.</p>
+    <h2>Example</h2>
+    <p>JSON input:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">[{"name":"Ali","city":"Jhelum"},{"name":"Sara","city":"Lahore","age":30}]</pre>
+    <p>CSV output:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">name,city,age
+Ali,Jhelum,
+Sara,Lahore,30</pre>
+    <p>The age field exists only in the second object, so the first row has an empty cell in that column.</p>
+
     <h2>Handling nested values</h2>
     <p>If a field's value is itself an object or array, it's written into the CSV cell as a JSON string rather than dropped, so you don't lose any data — you can flatten it further in your spreadsheet if needed.</p>
 
@@ -94,6 +103,20 @@
     <p>Yes, but nested objects or arrays are written into their cell as a JSON string rather than split into separate columns, since CSV itself has no concept of nesting. This keeps all your data intact for further flattening if you need it.</p>
     <h3>Does this work with a single JSON object, not just an array?</h3>
     <p>Yes — if you paste a single object instead of an array, it's treated as one row and converted the same way.</p>
+
+    <h3>Is my JSON uploaded to a server?</h3>
+    <p>No. The conversion runs in your browser with JavaScript, so what you paste stays on your device.</p>
+    <h3>How do I open the CSV in Excel or Google Sheets?</h3>
+    <p>Download the .csv file and open it in Excel. In Google Sheets, use File, then Import, and choose the downloaded file.</p>
+    <h3>Can I convert CSV back to JSON?</h3>
+    <p>This page converts JSON to CSV only.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      Check your JSON with the <a href="/json-formatter.html">JSON Formatter</a> before converting.
+      Combine files first with <a href="/merge-json.html">Merge JSON</a>, or break a large array into parts with the <a href="/json-splitter.html">JSON Splitter</a>.
+      Prefer a config format? Try <a href="/json-to-yaml.html">JSON to YAML</a>.
+    </p>
   </div>
 </main>
 
@@ -116,6 +139,21 @@
       "@type": "Question",
       "name": "Does this work with a single JSON object, not just an array?",
       "acceptedAnswer": { "@type": "Answer", "text": "Yes — a single object is treated as one row and converted the same way as an array of objects." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my JSON uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The conversion runs in your browser with JavaScript, so what you paste stays on your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I open the CSV in Excel or Google Sheets?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Download the .csv file and open it in Excel. In Google Sheets, use File, then Import, and choose the downloaded file." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert CSV back to JSON?",
+      "acceptedAnswer": { "@type": "Answer", "text": "This page converts JSON to CSV only." }
     }
   ]
 }

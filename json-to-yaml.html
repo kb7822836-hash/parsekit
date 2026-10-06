@@ -9,6 +9,51 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JSON to YAML Converter",
+  "url": "https://parsekit.net/json-to-yaml.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Convert JSON to YAML instantly in your browser. Free, no signup, nothing uploaded. Handles nested objects, arrays, and special characters."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between JSON and YAML?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Both store structured data. JSON uses braces, brackets and quotes and is strict. YAML uses indentation and is designed to be easier for people to read and edit." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use the output in Docker Compose or Kubernetes?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The output is standard YAML, so yes, as long as your JSON already has the structure the tool expects. The converter changes the format, not the meaning of your data." }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I choose 2 or 4 spaces?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Both are valid YAML. Many Docker, Kubernetes and GitHub Actions files use 2 spaces, but follow the style your project already uses." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are comments kept?",
+      "acceptedAnswer": { "@type": "Answer", "text": "JSON has no comments, so the YAML output has none either. You can add comments to the YAML file yourself afterwards." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert YAML back to JSON?",
+      "acceptedAnswer": { "@type": "Answer", "text": "This page converts JSON to YAML only." }
+    }
+  ]
+}
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -78,10 +123,38 @@
     <p>YAML is the format behind Docker Compose files, Kubernetes manifests, GitHub Actions workflows and many config files. If your data is in JSON, this tool rewrites it as readable, indented YAML in one click.</p>
     <h3>How to use it</h3>
     <p>Paste valid JSON on the left, pick 2 or 4 space indentation, and press Convert. Copy the result or download it as a .yaml file.</p>
+    <h3>Example</h3>
+    <p>JSON input:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{"service":"web","image":"nginx:latest","debug":"false","replicas":3}</pre>
+    <p>YAML output:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">service: web
+image: nginx:latest
+debug: "false"
+replicas: 3</pre>
+    <p>The text value "false" is wrapped in quotes so YAML does not read it as a true or false value, while the number 3 stays unquoted.</p>
     <h3>Is my data safe?</h3>
     <p>Yes. The conversion happens in your browser with JavaScript. Nothing is sent to a server.</p>
     <h3>What gets quoted?</h3>
     <p>Strings that YAML could misread, such as "true", "null", numbers written as text, or text containing a colon followed by a space, are automatically wrapped in quotes so the meaning stays the same.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>What is the difference between JSON and YAML?</h3>
+    <p>Both store structured data. JSON uses braces, brackets and quotes and is strict, which makes it easy for programs to read. YAML uses indentation and is designed to be easier for people to read and edit, which is why many config files use it.</p>
+    <h3>Can I use the output in Docker Compose or Kubernetes?</h3>
+    <p>The output is standard YAML, so yes, as long as your JSON already has the structure the tool expects, such as a services key for Docker Compose. The converter changes the format, not the meaning of your data.</p>
+    <h3>Should I choose 2 or 4 spaces?</h3>
+    <p>Both are valid YAML. Many Docker, Kubernetes and GitHub Actions files use 2 spaces, but follow the style your project already uses.</p>
+    <h3>Are comments kept?</h3>
+    <p>JSON has no comments, so the YAML output has none either. You can add comments to the YAML file yourself afterwards.</p>
+    <h3>Can I convert YAML back to JSON?</h3>
+    <p>This page converts JSON to YAML only.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      Check your input with the <a href="/json-formatter.html">JSON Formatter</a> first if the conversion fails.
+      Compare two versions with <a href="/json-diff.html">JSON Diff</a> or combine files with <a href="/merge-json.html">Merge JSON</a>.
+      You can also turn an array of objects into a spreadsheet with <a href="/json-to-csv.html">JSON to CSV</a>.
+    </p>
   </div>
 </main>
 
