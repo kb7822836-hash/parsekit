@@ -36,4 +36,6 @@
   <url><loc>https://parsekit.net/url-encode-decode.html</loc></url>
   <url><loc>https://parsekit.net/json-splitter.html</loc></url>
   <url><loc>https://parsekit.net/json-escape-unescape.html</loc></url>
+  <url><loc>https://parsekit.net/json-repair.html</loc></url>
+  <url><loc>https://parsekit.net/json-parse-errors.html</loc></url>
 </urlset>

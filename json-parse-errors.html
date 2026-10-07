@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Parse Errors Explained: Unexpected Token, Unexpected End and More | Parsekit</title>
+<meta name="description" content="What common JSON.parse errors mean and how to fix them: Unexpected token &lt;, Unexpected end of JSON input, [object Object], trailing commas, single quotes and more.">
+<link rel="canonical" href="https://parsekit.net/json-parse-errors.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">guide</p>
+    <h1>JSON Parse Errors Explained</h1>
+    <p>What the most common JSON errors mean, why they happen, and how to fix each one. Paste your broken JSON into the <a href="/json-repair.html">JSON Repair tool</a> to fix many of them automatically.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+    <p>The exact wording of a JSON error depends on the browser, the Node.js version or the programming language. Where the message changed between versions, both forms are shown below. If you cannot find your message, look at the cause that matches your situation.</p>
+
+    <h2>Quick list</h2>
+    <ul>
+      <li><a href="#unexpected-token-html">Unexpected token &lt; in JSON at position 0</a></li>
+      <li><a href="#unexpected-end">Unexpected end of JSON input</a></li>
+      <li><a href="#object-object">[object Object] is not valid JSON</a></li>
+      <li><a href="#undefined">"undefined" is not valid JSON</a></li>
+      <li><a href="#trailing-comma">Trailing comma errors</a></li>
+      <li><a href="#single-quotes">Single quotes and unquoted keys</a></li>
+      <li><a href="#missing-comma">Missing comma</a></li>
+      <li><a href="#extra-data">Extra data after the JSON</a></li>
+      <li><a href="#control-character">Bad control character in a string</a></li>
+      <li><a href="#comments-python">Comments, True, None and NaN</a></li>
+    </ul>
+
+    <h2 id="unexpected-token-html">Unexpected token &lt; in JSON at position 0</h2>
+    <p><strong>Newer wording:</strong> Unexpected token '&lt;', "&lt;!DOCTYPE "... is not valid JSON. <strong>Python:</strong> Expecting value: line 1 column 1 (char 0).</p>
+    <p><strong>Cause:</strong> The text you tried to parse is not JSON at all. It starts with a <code>&lt;</code>, which usually means the server sent back an HTML page, such as a 404 page, a login page or an error page, instead of JSON.</p>
+    <p><strong>Fix:</strong> Look at what the response really contains before you parse it, and check the status code and the address you called.</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">const res = await fetch(url);
+if (!res.ok) throw new Error('HTTP ' + res.status);
+const text = await res.text();
+console.log(text.slice(0, 200)); // is this HTML?
+const data = JSON.parse(text);</pre>
+
+    <h2 id="unexpected-end">Unexpected end of JSON input</h2>
+    <p><strong>Python:</strong> Expecting value: line 1 column 1 (char 0) for empty text, or Unterminated string starting at.</p>
+    <p><strong>Cause:</strong> The text is empty, or it stops before the JSON is finished. Typical reasons are an empty response body (for example a 204 status), a cut-off download, or a copy that missed the last bracket.</p>
+    <p><strong>Fix:</strong> Check that the text is not empty before parsing. If it was cut off, get the full text again. If you only have the cut-off copy, the <a href="/json-repair.html">JSON Repair tool</a> can close the missing brackets and braces when the text stops after a complete value.</p>
+
+    <h2 id="object-object">[object Object] is not valid JSON</h2>
+    <p><strong>Older wording:</strong> Unexpected token o in JSON at position 1.</p>
+    <p><strong>Cause:</strong> You passed an object to <code>JSON.parse</code>. JavaScript turns the object into the text "[object Object]" first, and that text is not JSON. The data was probably already parsed, for example by <code>response.json()</code> or by an HTTP library.</p>
+    <p><strong>Fix:</strong> Do not parse it a second time. If you need JSON text from an object, use <code>JSON.stringify(obj)</code>.</p>
+
+    <h2 id="undefined">"undefined" is not valid JSON</h2>
+    <p><strong>Older wording:</strong> Unexpected token u in JSON at position 0.</p>
+    <p><strong>Cause:</strong> The value you parsed is <code>undefined</code>. A property name may be wrong, a request may not have finished, or a value was never set.</p>
+    <p><strong>Fix:</strong> Check the variable before you parse it.</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">if (typeof raw === 'string' &amp;&amp; raw.length) {
+  const data = JSON.parse(raw);
+}</pre>
+
+    <h2 id="trailing-comma">Trailing comma errors</h2>
+    <p><strong>Messages:</strong> Unexpected token } in JSON at position N, Expected double-quoted property name in JSON at position N. <strong>Python:</strong> Expecting property name enclosed in double quotes.</p>
+    <p><strong>Cause:</strong> A comma after the last item of an object or array. JavaScript allows this in code, but JSON does not.</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{"a": 1, "b": 2,}     // invalid
+{"a": 1, "b": 2}      // valid</pre>
+    <p><strong>Fix:</strong> Remove the last comma. The <a href="/json-repair.html">JSON Repair tool</a> does this for you.</p>
+
+    <h2 id="single-quotes">Single quotes and unquoted keys</h2>
+    <p><strong>Messages:</strong> Unexpected token ' in JSON at position 1, Expected property name or '}' in JSON at position 1. <strong>Python:</strong> Expecting property name enclosed in double quotes.</p>
+    <p><strong>Cause:</strong> JSON only accepts double quotes, and every key must be in quotes. Single quotes and keys without quotes work in JavaScript and Python code but are not valid JSON.</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{'name': 'Ali'}       // invalid
+{name: "Ali"}         // invalid
+{"name": "Ali"}       // valid</pre>
+    <p><strong>Fix:</strong> Use double quotes for all keys and string values.</p>
+
+    <h2 id="missing-comma">Missing comma</h2>
+    <p><strong>Messages:</strong> Expected ',' or '}' after property value in JSON at position N. <strong>Python:</strong> Expecting ',' delimiter: line L column C.</p>
+    <p><strong>Cause:</strong> Two items follow each other without a comma between them, which often happens after editing a file by hand.</p>
+    <p><strong>Fix:</strong> Add the comma at the position the message points to, usually right after the previous value. The position is counted in characters from the start of the text.</p>
+
+    <h2 id="extra-data">Extra data after the JSON</h2>
+    <p><strong>Messages:</strong> Unexpected non-whitespace character after JSON at position N. <strong>Python:</strong> Extra data: line L column C.</p>
+    <p><strong>Cause:</strong> The text contains one complete JSON value followed by more text. This happens with two JSON objects pasted one after another, with files in JSON Lines format (one JSON value per line), or with a sentence after the JSON in an AI reply.</p>
+    <p><strong>Fix:</strong> Parse one value at a time. For JSON Lines, split the text into lines and parse each line separately. To break a large JSON array into smaller files, use the <a href="/json-splitter.html">JSON Splitter</a>.</p>
+
+    <h2 id="control-character">Bad control character in a string</h2>
+    <p><strong>Message:</strong> Bad control character in string literal in JSON at position N. <strong>Python:</strong> Invalid control character at: line L column C.</p>
+    <p><strong>Cause:</strong> A string contains a real line break or tab. In JSON these must be written as <code>\n</code> and <code>\t</code>.</p>
+    <p><strong>Fix:</strong> Replace the line break with <code>\n</code>. The <a href="/json-escape-unescape.html">JSON Escape tool</a> escapes text for you, and quotes inside strings must be written as <code>\"</code>.</p>
+
+    <h2 id="comments-python">Comments, True, None and NaN</h2>
+    <p><strong>Cause:</strong> JSON has no comments, and its only literal values are <code>true</code>, <code>false</code> and <code>null</code>. Text copied from JavaScript or Python often contains <code>// comments</code>, <code>True</code>, <code>False</code>, <code>None</code>, <code>undefined</code> or <code>NaN</code>, and parsers reject all of them. The message depends on where the parser first gets stuck.</p>
+    <p><strong>Fix:</strong> Remove the comments and use <code>true</code>, <code>false</code> and <code>null</code>. In Python, <code>json.dumps()</code> writes the correct form for you.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>What does "position N" mean in a JSON error?</h3>
+    <p>It is the number of characters from the start of the text to the place where parsing failed. The real mistake is often just before that position, for example a missing comma after the previous value.</p>
+    <h3>Why is my JSON valid in JavaScript code but rejected by JSON.parse?</h3>
+    <p>JavaScript object literals allow single quotes, keys without quotes, comments and trailing commas. JSON is a stricter format and allows none of them.</p>
+    <h3>How can I find the exact line of an error?</h3>
+    <p>Paste the text into the <a href="/json-formatter.html">JSON Formatter</a>, which reports where the syntax error is. For a quick automatic fix, try the <a href="/json-repair.html">JSON Repair tool</a>.</p>
+    <h3>Is my JSON uploaded when I use these tools?</h3>
+    <p>No. The tools run in your browser with JavaScript, and nothing you paste is sent to a server.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      Fix broken JSON with the <a href="/json-repair.html">JSON Repair tool</a>.
+      Check syntax with the <a href="/json-formatter.html">JSON Formatter</a>.
+      Escape strings with <a href="/json-escape-unescape.html">JSON Escape and Unescape</a>.
+      Compare two versions with <a href="/json-diff.html">JSON Diff</a>.
+    </p>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does \"position N\" mean in a JSON error?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It is the number of characters from the start of the text to the place where parsing failed. The real mistake is often just before that position, for example a missing comma after the previous value." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my JSON valid in JavaScript code but rejected by JSON.parse?",
+      "acceptedAnswer": { "@type": "Answer", "text": "JavaScript object literals allow single quotes, keys without quotes, comments and trailing commas. JSON is a stricter format and allows none of them." }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I find the exact line of an error?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Paste the text into the JSON Formatter, which reports where the syntax error is. For a quick automatic fix, try the JSON Repair tool." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my JSON uploaded when I use these tools?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The tools run in your browser with JavaScript, and nothing you paste is sent to a server." }
+    }
+  ]
+}
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

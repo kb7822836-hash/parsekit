@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Repair Online - Fix Invalid JSON from ChatGPT, Claude and More | Parsekit</title>
+<meta name="description" content="Fix broken JSON online. Repairs trailing commas, single quotes, unquoted keys, comments, missing brackets and markdown fences from AI replies. Free, and nothing is uploaded.">
+<link rel="canonical" href="https://parsekit.net/json-repair.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JSON Repair",
+  "url": "https://parsekit.net/json-repair.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Fix broken JSON online: trailing commas, single quotes, unquoted keys, comments, missing brackets and markdown fences. Free, no signup, runs entirely in your browser."
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">tool 10 / repair</p>
+    <h1>JSON Repair: Fix Invalid JSON Online</h1>
+    <p>Paste broken JSON and get valid JSON back. It fixes the mistakes that usually come from AI replies, hand-edited config files and copied code: trailing commas, single quotes, unquoted keys, comments, missing brackets and markdown fences. Everything runs in your browser, so nothing is uploaded.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="controls-row">
+    <button class="btn accent" id="rep-run">Repair JSON</button>
+    <button class="btn secondary" id="rep-copy">Copy result</button>
+    <button class="btn secondary" id="rep-download" disabled>Download .json</button>
+    <button class="btn secondary" id="rep-sample">Load sample</button>
+    <button class="btn secondary" id="rep-clear">Clear</button>
+    <label for="rep-indent" style="margin-left:12px;font-size:13px;">Output:</label>
+    <select id="rep-indent" class="small-select" aria-label="Output format">
+      <option value="2" selected>2 spaces</option>
+      <option value="4">4 spaces</option>
+      <option value="0">Minified</option>
+    </select>
+  </div>
+
+  <div class="workbench">
+    <div class="panel">
+      <div class="panel-label"><span>broken JSON</span></div>
+      <textarea id="rep-input" spellcheck="false" placeholder="{name: 'Ali', &quot;age&quot;: 24, &quot;skills&quot;: [&quot;js&quot;,],}"></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-label"><span>repaired JSON</span></div>
+      <pre class="output-box" id="rep-output"></pre>
+    </div>
+  </div>
+  <p class="status-line" id="rep-status"></p>
+  <div class="helper-copy" style="padding-top:0;">
+    <ul id="rep-fixes" style="margin:0 0 8px 18px;font-size:14px;"></ul>
+  </div>
+
+  <div class="helper-copy">
+    <h2>What JSON Repair can fix</h2>
+    <p>JSON is strict, so one small mistake makes <code>JSON.parse</code> fail. This tool reads the text the way a forgiving parser would, then writes it back out as valid JSON. It can fix:</p>
+    <ul>
+      <li>trailing commas and extra commas</li>
+      <li>missing commas between items</li>
+      <li>single quotes and curly quotes around strings</li>
+      <li>keys without quotes</li>
+      <li>comments (<code>//</code> and <code>/* */</code>)</li>
+      <li>Python and JavaScript values such as <code>True</code>, <code>False</code>, <code>None</code>, <code>undefined</code> and <code>NaN</code></li>
+      <li>missing closing brackets and braces, for example when the text was cut off</li>
+      <li>markdown code fences and extra text around the JSON, as found in chat replies from ChatGPT, Claude and other AI tools</li>
+      <li>unescaped quotes and line breaks inside strings</li>
+    </ul>
+
+    <h2>How to use it</h2>
+    <p>Paste the broken JSON into the left box and press Repair JSON. The fixed JSON appears on the right, with a list of what was changed. Copy it or download it as a .json file. Always take a quick look at the result before you use it, because the tool repairs syntax and cannot know what you meant.</p>
+
+    <h3>Example</h3>
+    <p>Broken input:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{name: 'Ali', "age": 24, "active": True, "skills": ["js", "python",],}</pre>
+    <p>Repaired output:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{
+  "name": "Ali",
+  "age": 24,
+  "active": true,
+  "skills": [
+    "js",
+    "python"
+  ]
+}</pre>
+    <p>Here the key was quoted, the single quotes were replaced, <code>True</code> became <code>true</code>, and both trailing commas were removed.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>Why does ChatGPT or Claude sometimes return invalid JSON?</h3>
+    <p>AI models write text, and nothing forces that text to be valid JSON unless you use a structured output feature. Common problems are a markdown code fence around the JSON, a sentence before or after it, trailing commas, comments and single quotes.</p>
+    <h3>Will the tool change my data?</h3>
+    <p>It only fixes syntax. Values, key order and numbers are kept as they are. It cannot guess missing values, and a few fixes, such as unescaped quotes inside strings, are best guesses, so check the result.</p>
+    <h3>Can it fix JSON that was cut off?</h3>
+    <p>If the text stops after a complete value, it adds the missing closing brackets and braces. If it stops in the middle of a string or right after a colon, there is nothing sensible to recover, and the tool tells you where it got stuck.</p>
+    <h3>What if it cannot repair my input?</h3>
+    <p>You will see the position where it stopped. Fix that spot by hand, or paste the text into the <a href="/json-formatter.html">JSON Formatter</a> to find the exact syntax error. Our guide to <a href="/json-parse-errors.html">common JSON parse errors</a> explains what each message means.</p>
+    <h3>Is my JSON uploaded to a server?</h3>
+    <p>No. The repair runs in your browser with JavaScript. Nothing you paste is sent anywhere.</p>
+    <h3>If the JSON is already valid, what happens?</h3>
+    <p>The tool tells you it was already valid and just formats it with the indentation you chose.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      Format and validate the result with the <a href="/json-formatter.html">JSON Formatter</a>.
+      See what the repair changed with <a href="/json-diff.html">JSON Diff</a>.
+      Put JSON inside a string with <a href="/json-escape-unescape.html">JSON Escape and Unescape</a>.
+      Read the guide to <a href="/json-parse-errors.html">JSON parse errors</a>.
+    </p>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does ChatGPT or Claude sometimes return invalid JSON?",
+      "acceptedAnswer": { "@type": "Answer", "text": "AI models write text, and nothing forces that text to be valid JSON unless you use a structured output feature. Common problems are a markdown code fence around the JSON, a sentence before or after it, trailing commas, comments and single quotes." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will the tool change my data?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It only fixes syntax. Values, key order and numbers are kept as they are. It cannot guess missing values, and a few fixes, such as unescaped quotes inside strings, are best guesses, so check the result." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it fix JSON that was cut off?",
+      "acceptedAnswer": { "@type": "Answer", "text": "If the text stops after a complete value, it adds the missing closing brackets and braces. If it stops in the middle of a string or right after a colon, there is nothing sensible to recover." }
+    },
+    {
+      "@type": "Question",
+      "name": "What if it cannot repair my input?",
+      "acceptedAnswer": { "@type": "Answer", "text": "You will see the position where it stopped. Fix that spot by hand, or paste the text into the JSON Formatter to find the exact syntax error." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my JSON uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The repair runs in your browser with JavaScript. Nothing you paste is sent anywhere." }
+    },
+    {
+      "@type": "Question",
+      "name": "If the JSON is already valid, what happens?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The tool tells you it was already valid and just formats it with the indentation you chose." }
+    }
+  ]
+}
+</script>
+
+<div class="ad-slot"><div class="ad-slot-inner">Ad placement &mdash; in-content (below tool, above footer)</div></div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+
+  var CLOSE = {
+    '"': ['"'],
+    "'": ["'"],
+    '\u201C': ['\u201D', '"', '\u201C'],
+    '\u201D': ['\u201D', '"', '\u201C'],
+    '\u2018': ['\u2019', "'", '\u2018'],
+    '\u2019': ['\u2019', "'", '\u2018']
+  };
+
+  function isQuote(c) {
+    return c !== '' && Object.prototype.hasOwnProperty.call(CLOSE, c);
+  }
+
+  // Reads broken JSON leniently and returns { ast, fixes }.
+  function repairCore(src) {
+    var fixes = {};
+    function note(msg) { fixes[msg] = (fixes[msg] || 0) + 1; }
+
+    var s = String(src).replace(/^\uFEFF/, '');
+    var fence = /```[A-Za-z0-9_-]*[ \t]*\r?\n?([\s\S]*?)```/.exec(s);
+    if (fence) {
+      var outside = (s.slice(0, fence.index) + s.slice(fence.index + fence[0].length)).trim();
+      s = fence[1];
+      note('Removed markdown code fence');
+      if (outside) note('Removed text before or after the JSON');
+    } else if (/^\s*```/.test(s)) {
+      s = s.replace(/^\s*```[A-Za-z0-9_-]*[ \t]*\r?\n?/, '');
+      note('Removed markdown code fence');
+    }
+    var start = s.search(/[\[{]/);
+    if (start > 0) {
+      var prefix = s.slice(0, start).trim();
+      if (prefix !== '' && !isQuote(prefix.charAt(0))) {
+        s = s.slice(start);
+        note('Removed text before the JSON');
+      }
+    }
+
+    var i = 0;
+    var NUM = /[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?/y;
+    var WORD = /[A-Za-z_$][A-Za-z0-9_$]*/y;
+    var KEY = /[^\s:,{}\[\]"'\u201C\u201D\u2018\u2019]+/y;
+    var STRICT = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][-+]?\d+)?$/;
+    var ESC = { n: '\n', t: '\t', r: '\r', b: '\b', f: '\f', '/': '/', '\\': '\\', '"': '"', "'": "'" };
+
+    function fail(msg) {
+      var snip = s.slice(Math.max(0, i - 20), i + 20).replace(/\s+/g, ' ');
+      throw new Error(msg + ' (near: ' + snip + ')');
+    }
+
+    function ws() {
+      for (;;) {
+        var c = s.charAt(i);
+        if (c === ' ' || c === '\t' || c === '\n' || c === '\r' || c === '\u00A0' || c === '\uFEFF') { i++; continue; }
+        if (c === '/' && s.charAt(i + 1) === '/') {
+          while (i < s.length && s.charAt(i) !== '\n') i++;
+          note('Removed comment');
+          continue;
+        }
+        if (c === '/' && s.charAt(i + 1) === '*') {
+          var e = s.indexOf('*/', i + 2);
+          i = e === -1 ? s.length : e + 2;
+          note('Removed comment');
+          continue;
+        }
+        return;
+      }
+    }
+
+    function str() {
+      var q = s.charAt(i);
+      i++;
+      var closers = CLOSE[q];
+      if (q === "'") note('Changed single quotes to double quotes');
+      else if (q !== '"') note('Replaced curly quotes with straight quotes');
+      var out = '';
+      for (;;) {
+        if (i >= s.length) fail('The text ends inside a string');
+        var c = s.charAt(i);
+        if (closers.indexOf(c) !== -1) {
+          var j = i + 1, nl = false;
+          while (j < s.length && /\s/.test(s.charAt(j))) {
+            if (s.charAt(j) === '\n') nl = true;
+            j++;
+          }
+          var nx = s.charAt(j);
+          var ok = j >= s.length || nx === ',' || nx === '}' || nx === ']' || nx === ':' ||
+            (nx === '/' && (s.charAt(j + 1) === '/' || s.charAt(j + 1) === '*')) ||
+            (nl && (isQuote(nx) || /[A-Za-z_${\[0-9-]/.test(nx)));
+          if (ok) { i++; return out; }
+          note('Escaped a quote inside a string');
+          out += c; i++;
+          continue;
+        }
+        if (c === '\\') {
+          var d = s.charAt(i + 1);
+          if (d === 'u' && /^[0-9a-fA-F]{4}$/.test(s.substr(i + 2, 4))) {
+            out += String.fromCharCode(parseInt(s.substr(i + 2, 4), 16));
+            i += 6;
+            continue;
+          }
+          if (d !== '' && Object.prototype.hasOwnProperty.call(ESC, d)) { out += ESC[d]; i += 2; continue; }
+          if (d === '') { i++; continue; }
+          note('Fixed an invalid escape sequence');
+          out += d; i += 2;
+          continue;
+        }
+        if (c === '\n' || c === '\r' || c === '\t') note('Escaped a line break or tab inside a string');
+        out += c; i++;
+      }
+    }
+
+    function key() {
+      var c = s.charAt(i);
+      if (isQuote(c)) return str();
+      KEY.lastIndex = i;
+      var m = KEY.exec(s);
+      if (!m) fail('Expected a property name');
+      i += m[0].length;
+      note('Put quotes around an unquoted key');
+      return m[0];
+    }
+
+    function val() {
+      ws();
+      var c = s.charAt(i);
+      if (c === '{') return obj();
+      if (c === '[') return arr();
+      if (isQuote(c)) return str();
+      if (c === '') fail('Unexpected end of the text');
+      if (c === '-' && s.substr(i + 1, 8) === 'Infinity') {
+        i += 9;
+        note('Replaced undefined, NaN and Infinity with null');
+        return null;
+      }
+      NUM.lastIndex = i;
+      var m = NUM.exec(s);
+      if (m) {
+        var t = m[0];
+        i += t.length;
+        if (STRICT.test(t)) return { n: t };
+        note('Normalized a non-standard number');
+        var v = Number(t);
+        return { n: isFinite(v) ? String(v) : 'null' };
+      }
+      WORD.lastIndex = i;
+      m = WORD.exec(s);
+      if (m) {
+        var w = m[0];
+        i += w.length;
+        if (w === 'true') return true;
+        if (w === 'false') return false;
+        if (w === 'null') return null;
+        if (w === 'True') { note('Changed True to true'); return true; }
+        if (w === 'False') { note('Changed False to false'); return false; }
+        if (w === 'None') { note('Changed None to null'); return null; }
+        if (w === 'undefined' || w === 'NaN' || w === 'Infinity') {
+          note('Replaced undefined, NaN and Infinity with null');
+          return null;
+        }
+        note('Put quotes around an unquoted value');
+        return w;
+      }
+      fail('Unexpected character "' + c + '"');
+    }
+
+    function obj() {
+      i++;
+      var entries = [];
+      for (;;) {
+        ws();
+        var c = s.charAt(i);
+        if (c === '}') { i++; return { o: entries }; }
+        if (c === '') { note('Added a missing closing brace'); return { o: entries }; }
+        if (c === ',') { i++; note('Removed an extra comma'); continue; }
+        var k = key();
+        ws();
+        if (s.charAt(i) === ':') i++;
+        else fail('Expected ":" after the key');
+        var v = val();
+        entries.push([k, v]);
+        ws();
+        c = s.charAt(i);
+        if (c === ',') {
+          i++;
+          ws();
+          if (s.charAt(i) === '}') note('Removed a trailing comma');
+        } else if (c !== '}' && c !== '') {
+          note('Added a missing comma');
+        }
+      }
+    }
+
+    function arr() {
+      i++;
+      var a = [];
+      for (;;) {
+        ws();
+        var c = s.charAt(i);
+        if (c === ']') { i++; return a; }
+        if (c === '') { note('Added a missing closing bracket'); return a; }
+        if (c === ',') { i++; note('Removed an extra comma'); continue; }
+        a.push(val());
+        ws();
+        c = s.charAt(i);
+        if (c === ',') {
+          i++;
+          ws();
+          if (s.charAt(i) === ']') note('Removed a trailing comma');
+        } else if (c !== ']' && c !== '') {
+          note('Added a missing comma');
+        }
+      }
+    }
+
+    ws();
+    if (i >= s.length) throw new Error('There is no JSON in the input');
+    var ast = val();
+    ws();
+    if (i < s.length) note('Ignored extra content after the first JSON value');
+    return { ast: ast, fixes: fixes };
+  }
+
+  function pad(n) { return new Array(n + 1).join(' '); }
+
+  function ser(v, step, lvl) {
+    if (v === null) return 'null';
+    if (v === true) return 'true';
+    if (v === false) return 'false';
+    if (typeof v === 'string') return JSON.stringify(v);
+    var parts = [], k;
+    if (Array.isArray(v)) {
+      if (!v.length) return '[]';
+      for (k = 0; k < v.length; k++) parts.push(ser(v[k], step, lvl + 1));
+      if (!step) return '[' + parts.join(',') + ']';
+      return '[\n' + parts.map(function (p) { return pad(step * (lvl + 1)) + p; }).join(',\n') + '\n' + pad(step * lvl) + ']';
+    }
+    if (v.n !== undefined) return v.n;
+    if (!v.o.length) return '{}';
+    for (k = 0; k < v.o.length; k++) {
+      parts.push(JSON.stringify(v.o[k][0]) + (step ? ': ' : ':') + ser(v.o[k][1], step, lvl + 1));
+    }
+    if (!step) return '{' + parts.join(',') + '}';
+    return '{\n' + parts.map(function (p) { return pad(step * (lvl + 1)) + p; }).join(',\n') + '\n' + pad(step * lvl) + '}';
+  }
+
+  function run(raw, step) {
+    var res = repairCore(raw);
+    var text = ser(res.ast, step, 0);
+    try { JSON.parse(text); }
+    catch (e) { throw new Error('The result could not be turned into valid JSON'); }
+    var wasValid = true, orig;
+    try { orig = JSON.parse(raw); } catch (e2) { wasValid = false; }
+    if (wasValid && JSON.stringify(orig) !== JSON.stringify(JSON.parse(text))) {
+      text = JSON.stringify(orig, null, step || undefined);
+    }
+    return { text: text, fixes: res.fixes, wasValid: wasValid };
+  }
+
+  window.parsekitRepair = run;
+
+  var inp = document.getElementById('rep-input');
+  var out = document.getElementById('rep-output');
+  var status = document.getElementById('rep-status');
+  var fixBox = document.getElementById('rep-fixes');
+  var indent = document.getElementById('rep-indent');
+  var dl = document.getElementById('rep-download');
+  var lastText = '';
+
+  function setStatus(msg, isErr) {
+    status.textContent = msg;
+    status.style.color = isErr ? '#b3261e' : '';
+  }
+
+  function track() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'tool_use', { tool_name: 'json-repair', page_path: location.pathname });
+    }
+  }
+
+  function reset() {
+    out.textContent = '';
+    fixBox.innerHTML = '';
+    lastText = '';
+    dl.disabled = true;
+  }
+
+  function doRepair() {
+    reset();
+    var raw = inp.value;
+    if (!raw.trim()) { setStatus('Paste some JSON first.', true); return; }
+    var step = parseInt(indent.value, 10) || 0;
+    var res;
+    try {
+      res = run(raw, step);
+    } catch (e) {
+      var msg = (e instanceof RangeError) ? 'The JSON is nested too deeply to process.' : e.message;
+      setStatus('Could not repair this input: ' + msg, true);
+      return;
+    }
+    lastText = res.text;
+    out.textContent = res.text;
+    dl.disabled = false;
+    var keys = Object.keys(res.fixes);
+    var total = 0;
+    keys.forEach(function (k) {
+      total += res.fixes[k];
+      var li = document.createElement('li');
+      li.textContent = k + (res.fixes[k] > 1 ? ' (' + res.fixes[k] + ' times)' : '');
+      fixBox.appendChild(li);
+    });
+    if (!keys.length) {
+      setStatus(res.wasValid ? 'This JSON was already valid. It has been formatted.' : 'Fixed minor spacing problems.', false);
+    } else {
+      setStatus('Repaired: ' + total + ' fix' + (total === 1 ? '' : 'es') + ' applied. Check the result before you use it.', false);
+    }
+    track();
+  }
+
+  document.getElementById('rep-run').addEventListener('click', doRepair);
+
+  document.getElementById('rep-copy').addEventListener('click', function () {
+    if (!lastText) { setStatus('There is no result to copy yet.', true); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastText).then(
+        function () { setStatus('Copied to clipboard.', false); },
+        function () { setStatus('Copy failed. Select the result and copy it manually.', true); }
+      );
+    } else {
+      setStatus('Copy is not available in this browser. Select the result and copy it manually.', true);
+    }
+  });
+
+  dl.addEventListener('click', function () {
+    if (!lastText) return;
+    var blob = new Blob([lastText], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'repaired.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+
+  document.getElementById('rep-sample').addEventListener('click', function () {
+    inp.value = [
+      'Here is the JSON you asked for:',
+      '',
+      '```json',
+      '{',
+      "  name: 'Ali',",
+      '  "age": 24,',
+      '  "active": True,',
+      '  "skills": ["js", "python",],',
+      '  // contact details',
+      '  "email": "ali@example.com"',
+      '  "city": "Jhelum",',
+      '}',
+      '```',
+      'Hope this helps!'
+    ].join('\n');
+    reset();
+    setStatus('', false);
+  });
+
+  document.getElementById('rep-clear').addEventListener('click', function () {
+    inp.value = '';
+    reset();
+    setStatus('', false);
+  });
+})();
+</script>
+</body>
+</html>
