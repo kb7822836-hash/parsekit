@@ -473,3 +473,5 @@ nav.main-nav a { padding: 8px 9px; font-size: 0.88rem; white-space: nowrap; }
 /* ---------- nav-tight: fit 8 nav links ---------- */
 
 nav.main-nav a { padding: 8px 7px; font-size: 0.86rem; }
+/* Hide ad placeholders until AdSense is approved */
+.ad-slot { display: none; }
