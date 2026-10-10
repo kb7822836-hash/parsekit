@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Merge JSON Files Online (Free, No Upload) | Parsekit</title>
+<title>Merge & Combine JSON Files Online (Free, No Upload) | Parsekit</title>
 <meta name="description" content="Merge or combine two JSON files online. Deep merge for objects, concatenation for arrays. Free, no signup, and nothing is uploaded - it runs in your browser.">
 <link rel="canonical" href="https://parsekit.net/merge-json.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +53,7 @@
 <div class="page-header">
   <div class="page-header-inner">
     <p class="kicker">tool 03 / merge</p>
-    <h1>Merge JSON Files Online</h1>
+    <h1>Merge & Combine JSON Files Online</h1>
     <p>Combine two JSON files into one. Use the Open file button above each panel, or paste the contents of each file into the two panels below. Parsekit does a deep merge for objects (matching keys are combined, and conflicts are won by the second panel) or joins two arrays end to end. Everything runs in your browser, so nothing is uploaded.</p>
   </div>
 </div>
@@ -103,6 +103,9 @@
     <p>If both inputs are arrays instead of objects, they are joined end to end into one longer array. Nothing is deduplicated, so repeated items are kept.</p>
     <p>For example, combining <code>[1,2]</code> and <code>[2,3]</code> gives <code>[1,2,2,3]</code>.</p>
 
+    <h2>Merge multiple JSON files</h2>
+    <p>This tool merges two inputs at a time, but you can combine as many JSON files as you need by repeating the steps. Merge file 1 and file 2, copy the result into panel A, load file 3 into panel B, and press Merge again. Repeat until every file is included. For objects, later files win key conflicts, so put the file you trust most last.</p>
+
     <h2>Frequently asked questions</h2>
     <h3>What happens when both files have the same key?</h3>
     <p>If both sides hold an object for that key, the two objects are merged recursively. Otherwise, the value from JSON B wins and replaces the value from JSON A.</p>
@@ -118,6 +121,8 @@
     <p>Yes. It is free, needs no signup, and has no usage limits.</p>
     <h3>How do I check what changed after merging?</h3>
     <p>Use the <a href="/json-diff.html">JSON Diff tool</a> to compare the original file with the merged result and see exactly which keys were added or changed.</p>
+    <h3>How do I combine JSON files into one?</h3>
+    <p>Open the first file in panel A and the second in panel B, then press Merge. For more than two files, copy the merged result back into panel A, load the next file in panel B, and merge again. When you finish, download the result as a .json file.</p>
 
     <h2>Related tools</h2>
     <p>
@@ -167,6 +172,11 @@
       "@type": "Question",
       "name": "How do I check what changed after merging?",
       "acceptedAnswer": { "@type": "Answer", "text": "Use the JSON Diff tool to compare the original file with the merged result and see exactly which keys were added or changed." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I combine JSON files into one?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Open the first file in panel A and the second in panel B, then press Merge. For more than two files, copy the merged result back into panel A, load the next file in panel B, and merge again. When you finish, download the result as a .json file." }
     }
   ]
 }
