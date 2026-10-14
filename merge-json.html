@@ -115,6 +115,10 @@
     <h2>Merge multiple JSON files</h2>
     <p>This tool merges two inputs at a time, but you can combine as many JSON files as you need by repeating the steps. Merge file 1 and file 2, copy the result into panel A, load file 3 into panel B, and press Merge again. Repeat until every file is included. For objects, later files win key conflicts, so put the file you trust most last.</p>
 
+    <h2>Merge arrays: join, replace or remove duplicates</h2>
+    <p>When the same key holds an array in both files, pick how to combine them with the Arrays menu. Standard joins two top-level arrays, and a nested array in JSON B replaces the one in JSON A. Always join arrays appends the items from B after the items from A at every level. Join arrays, remove duplicates does the same and then keeps each repeated item only once.</p>
+    <p>After every merge, the status line also tells you how many values from JSON B replaced a different value from JSON A.</p>
+
     <h2>Frequently asked questions</h2>
     <h3>What happens when both files have the same key?</h3>
     <p>If both sides hold an object for that key, the two objects are merged recursively. Otherwise, the value from JSON B wins and replaces the value from JSON A.</p>
@@ -132,6 +136,8 @@
     <p>Use the <a href="/json-diff.html">JSON Diff tool</a> to compare the original file with the merged result and see exactly which keys were added or changed.</p>
     <h3>How do I combine JSON files into one?</h3>
     <p>Open the first file in panel A and the second in panel B, then press Merge. For more than two files, copy the merged result back into panel A, load the next file in panel B, and merge again. When you finish, download the result as a .json file.</p>
+    <h3>How do I merge JSON arrays without duplicates?</h3>
+    <p>Choose <strong>Join arrays, remove duplicates</strong> in the Arrays menu, then press Merge. Arrays under the same key in both files are joined, and any repeated item is kept only once.</p>
 
     <h2>Related tools</h2>
     <p>
@@ -186,6 +192,11 @@
       "@type": "Question",
       "name": "How do I combine JSON files into one?",
       "acceptedAnswer": { "@type": "Answer", "text": "Open the first file in panel A and the second in panel B, then press Merge. For more than two files, copy the merged result back into panel A, load the next file in panel B, and merge again. When you finish, download the result as a .json file." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I merge JSON arrays without duplicates?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Choose Join arrays, remove duplicates in the Arrays menu, then press Merge. Arrays under the same key in both files are joined, and any repeated item is kept only once." }
     }
   ]
 }
