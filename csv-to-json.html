@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convert CSV to JSON Online (Free, No Upload) | Parsekit</title>
+<meta name="description" content="Convert CSV to a JSON array of objects online. Detects comma, semicolon, tab or pipe delimiters. Free, no signup, runs entirely in your browser.">
+<link rel="canonical" href="https://parsekit.net/csv-to-json.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CSV to JSON Converter",
+  "url": "https://parsekit.net/csv-to-json.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Convert CSV to a JSON array of objects online. Detects comma, semicolon, tab or pipe delimiters. Free, no signup, runs entirely in your browser."
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/csv-to-json.html" aria-current="page">CSV to JSON</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/json-splitter.html">JSON Splitter</a>
+      <a href="/json-escape-unescape.html">Escape/Unescape</a>
+      <a href="/json-repair.html">JSON Repair</a>
+      <a href="/json-parse-errors.html">Parse Errors</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">tool 15 / converter</p>
+    <h1>Convert CSV to JSON Online</h1>
+    <p>Paste CSV on the left. Parsekit turns every row into a JSON object, using the first row as the keys, and lets you copy the result or download it directly.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="controls-row">
+    <button class="btn accent" id="csvj-run">Convert to JSON</button>
+    <button class="btn secondary" id="csvj-download" disabled>Download .json</button>
+    <button class="btn secondary" id="csvj-sample">Load sample</button>
+    <button class="btn secondary" id="csvj-clear">Clear</button>
+  </div>
+
+  <div class="controls-row">
+    <label for="csvj-delim">Delimiter</label>
+    <select id="csvj-delim"><option value="auto">Auto-detect</option><option value="comma">Comma (,)</option><option value="semicolon">Semicolon (;)</option><option value="tab">Tab</option><option value="pipe">Pipe (|)</option></select>
+    <label><input type="checkbox" id="csvj-header" checked> First row is header</label>
+    <label><input type="checkbox" id="csvj-types" checked> Convert numbers and true/false</label>
+  </div>
+
+  <div class="workbench">
+    <div class="panel">
+      <div class="panel-label"><span>CSV input</span></div>
+      <textarea id="csvj-input" spellcheck="false" placeholder='name,city,age
+Ali,Jhelum,24
+Sara,"Lahore, Punjab",30'></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-label"><span>JSON output</span></div>
+      <pre class="output-box" id="csvj-output"></pre>
+    </div>
+  </div>
+  <p class="status-line" id="csvj-status"></p>
+
+  <div class="helper-copy">
+    <h2>What this tool does</h2>
+    <p>CSV is flat rows and columns, while JSON is structured data that apps and APIs can read. This tool takes your CSV, uses the first row as field names, and turns every following row into a JSON object. The result is a JSON array of objects, ready to use in code, an API request or a database import.</p>
+
+    <h2>Example</h2>
+    <p>CSV input:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">name,city,age
+Ali,Jhelum,24
+Sara,"Lahore, Punjab",30</pre>
+    <p>JSON output:</p>
+    <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">[
+  {
+    "name": "Ali",
+    "city": "Jhelum",
+    "age": 24
+  },
+  {
+    "name": "Sara",
+    "city": "Lahore, Punjab",
+    "age": 30
+  }
+]</pre>
+    <p>The comma inside "Lahore, Punjab" stays part of the value because that field is wrapped in double quotes.</p>
+
+    <h2>Options</h2>
+    <p>Delimiter: Auto-detect reads the first line and picks comma, semicolon, tab or pipe. Choose one yourself if the guess is wrong.</p>
+    <p>First row is header: when ticked, the first row becomes the keys of every object. When cleared, you get an array of arrays instead.</p>
+    <p>Convert numbers and true/false: when ticked, values such as 24 and true become real JSON numbers and booleans. Values with leading zeros, like 007, stay as text so nothing is lost. Clear the box to keep every value as a string.</p>
+
+    <h2>Common uses for CSV to JSON</h2>
+    <p>Turn a spreadsheet into API data. Export a sheet from Excel or Google Sheets as CSV, convert it here, and use the JSON in a request body or a mock API.</p>
+    <p>Load data into an app or database. Many importers and NoSQL databases expect JSON, so a CSV export can be converted first and then imported.</p>
+    <p>Create test data and config files. Keep rows in a spreadsheet where they are easy to edit, then convert them to JSON when you need fixtures.</p>
+    <p>The conversion runs in your browser, so private data is never uploaded, and there are no usage limits.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>How do I convert CSV to JSON?</h3>
+    <p>Paste your CSV into the input panel, or open a .csv file with the Open file button, then press Convert to JSON. Each row becomes an object and the first row supplies the keys.</p>
+    <h3>Does it handle commas and line breaks inside quoted values?</h3>
+    <p>Yes. A field wrapped in double quotes can contain commas, line breaks and doubled quotes, and it is read as a single value.</p>
+    <h3>Can it read semicolon or tab separated files?</h3>
+    <p>Yes. Auto-detect checks the first line for a comma, semicolon, tab or pipe. You can also pick the delimiter yourself.</p>
+    <h3>What does Convert numbers and true/false do?</h3>
+    <p>It turns values like 24 or 3.5 into JSON numbers and the words true and false into booleans. Clear the option to keep every value as text.</p>
+    <h3>Is my CSV uploaded to a server?</h3>
+    <p>No. The conversion runs in your browser with JavaScript, so what you paste stays on your device.</p>
+    <h3>Can I convert JSON back to CSV?</h3>
+    <p>Yes, use the <a href="/json-to-csv.html">JSON to CSV converter</a>.</p>
+
+    <h2>Related tools</h2>
+    <p>
+      Going the other way? Try <a href="/json-to-csv.html">JSON to CSV</a>.
+      Check the result with the <a href="/json-formatter.html">JSON Formatter</a>, combine data with <a href="/merge-json.html">Merge JSON</a>, or turn it into config with <a href="/json-to-yaml.html">JSON to YAML</a>.
+    </p>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert CSV to JSON?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Paste your CSV into the input panel, or open a .csv file, then press Convert to JSON. Each row becomes an object and the first row supplies the keys." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it handle commas and line breaks inside quoted values?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. A field wrapped in double quotes can contain commas, line breaks and doubled quotes, and it is read as a single value." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it read semicolon or tab separated files?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Auto-detect checks the first line for a comma, semicolon, tab or pipe. You can also pick the delimiter yourself." }
+    },
+    {
+      "@type": "Question",
+      "name": "What does Convert numbers and true/false do?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It turns values like 24 or 3.5 into JSON numbers and the words true and false into booleans. Clear the option to keep every value as text." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my CSV uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The conversion runs in your browser with JavaScript, so what you paste stays on your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert JSON back to CSV?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, use the JSON to CSV converter on Parsekit." }
+    }
+  ]
+}
+</script>
+
+<div class="ad-slot"><div class="ad-slot-inner">Ad placement &mdash; in-content (below tool, above footer)</div></div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/app.js"></script>
+<script src="/assets/file-load.js"></script>
+</body>
+</html>

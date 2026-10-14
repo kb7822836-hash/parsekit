@@ -673,8 +673,133 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------------- CSV to JSON Converter ---------------- */
+  const csvjInput = document.getElementById('csvj-input');
+  if (csvjInput) {
+    const csvjOutput = document.getElementById('csvj-output');
+    const csvjStatus = document.getElementById('csvj-status');
+    const csvjDownload = document.getElementById('csvj-download');
+    let lastCsvJson = '';
+
+    function csvjSetStatus(message, kind) {
+      csvjStatus.textContent = message;
+      csvjStatus.className = 'status-line' + (kind ? ' ' + kind : '');
+    }
+
+    function csvjDetectDelimiter(text) {
+      const firstLine = text.split(/\r?\n/)[0] || '';
+      let best = ',';
+      let bestCount = 0;
+      [',', ';', '\t', '|'].forEach(c => {
+        const count = firstLine.split(c).length - 1;
+        if (count > bestCount) { best = c; bestCount = count; }
+      });
+      return best;
+    }
+
+    function csvjParse(text, delim) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            if (text[i + 1] === '"') { field += '"'; i++; } else { inQuotes = false; }
+          } else {
+            field += ch;
+          }
+        } else if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === delim) {
+          row.push(field);
+          field = '';
+        } else if (ch === '\n' || ch === '\r') {
+          if (ch === '\r' && text[i + 1] === '\n') i++;
+          row.push(field);
+          field = '';
+          rows.push(row);
+          row = [];
+        } else {
+          field += ch;
+        }
+      }
+      if (field !== '' || row.length) { row.push(field); rows.push(row); }
+      return rows.filter(r => !(r.length === 1 && r[0] === ''));
+    }
+
+    function csvjTyped(v) {
+      if (v.length < 16 && /^-?(0|[1-9]\d*)(\.\d+)?$/.test(v)) return Number(v);
+      if (v === 'true') return true;
+      if (v === 'false') return false;
+      return v;
+    }
+
+    document.getElementById('csvj-sample').addEventListener('click', () => {
+      csvjInput.value = 'name,city,age\nAli,Jhelum,24\nSara,"Lahore, Punjab",30';
+    });
+
+    document.getElementById('csvj-run').addEventListener('click', () => {
+      const raw = csvjInput.value.replace(/^\uFEFF/, '');
+      if (!raw.trim()) {
+        csvjSetStatus('Paste CSV into the input panel.', '');
+        return;
+      }
+      try {
+        const sel = document.getElementById('csvj-delim').value;
+        const delim = sel === 'auto' ? csvjDetectDelimiter(raw) : ({ comma: ',', semicolon: ';', tab: '\t', pipe: '|' })[sel];
+        const withHeader = document.getElementById('csvj-header').checked;
+        const typed = document.getElementById('csvj-types').checked;
+        const conv = v => (typed ? csvjTyped(v) : v);
+        const rows = csvjParse(raw, delim);
+        let result;
+        if (withHeader) {
+          const headers = rows[0].map((h, i) => (h.trim() || 'column' + (i + 1)));
+          result = rows.slice(1).map(r => {
+            const o = {};
+            headers.forEach((h, i) => { o[h] = conv(r[i] === undefined ? '' : r[i]); });
+            return o;
+          });
+        } else {
+          result = rows.map(r => r.map(conv));
+        }
+        lastCsvJson = JSON.stringify(result, null, 2);
+        csvjOutput.textContent = lastCsvJson;
+        csvjDownload.disabled = false;
+        csvjSetStatus('Converted ' + result.length + ' row' + (result.length === 1 ? '' : 's') + ' successfully.', 'ok');
+      } catch (err) {
+        csvjOutput.textContent = '';
+        csvjDownload.disabled = true;
+        csvjSetStatus('Could not read this CSV: ' + (err.message || 'unknown error.'), 'error');
+      }
+    });
+
+    document.getElementById('csvj-clear').addEventListener('click', () => {
+      csvjInput.value = '';
+      csvjOutput.textContent = '';
+      lastCsvJson = '';
+      csvjDownload.disabled = true;
+      csvjSetStatus('', '');
+      csvjInput.focus();
+    });
+
+    csvjDownload.addEventListener('click', () => {
+      if (!lastCsvJson) return;
+      const blob = new Blob([lastCsvJson], { type: 'application/json;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'parsekit-converted.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
   /* ---------------- GA4 tool usage events ---------------- */
-  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml'], ['b64-encode', 'base64_encode'], ['b64-decode', 'base64_decode'], ['diff-run', 'json_diff'], ['url-encode', 'url_encode'], ['url-decode', 'url_decode']].forEach(([id, name]) => {
+  [['fmt-run', 'json_formatter'], ['fmt-minify', 'json_minify'], ['csvj-run', 'csv_to_json'], ['csv-run', 'json_to_csv'], ['merge-run', 'merge_json'], ['yaml-run', 'json_to_yaml'], ['b64-encode', 'base64_encode'], ['b64-decode', 'base64_decode'], ['diff-run', 'json_diff'], ['url-encode', 'url_encode'], ['url-decode', 'url_decode']].forEach(([id, name]) => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', () => {
