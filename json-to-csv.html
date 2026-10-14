@@ -70,6 +70,12 @@
   <button class="btn secondary" id="csv-clear">Clear</button>
   </div>
 
+  <div class="controls-row">
+    <label for="csv-delim">Delimiter</label>
+    <select id="csv-delim"><option value="comma">Comma (,)</option><option value="semicolon">Semicolon (;)</option><option value="tab">Tab</option><option value="pipe">Pipe (|)</option></select>
+    <label><input type="checkbox" id="csv-header" checked> Include header row</label>
+  </div>
+
   <div class="workbench">
     <div class="panel">
       <div class="panel-label"><span>JSON input (array of objects)</span></div>

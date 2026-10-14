@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return String(v);
     }
 
-    function toCsv(rows) {
+    function toCsv(rows, delim, withHeader) {
       const headers = Array.from(rows.reduce((set, row) => {
         Object.keys(row).forEach(k => set.add(k));
         return set;
@@ -88,13 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const escapeCell = (val) => {
         const s = flattenValue(val);
-        if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        if (s.includes(delim) || /["\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
         return s;
       };
 
-      const lines = [headers.map(escapeCell).join(',')];
+      const lines = withHeader ? [headers.map(escapeCell).join(delim)] : [];
       rows.forEach(row => {
-        lines.push(headers.map(h => escapeCell(row[h])).join(','));
+        lines.push(headers.map(h => escapeCell(row[h])).join(delim));
       });
       return lines.join('\n');
     }
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
           csvOutput.textContent = '';
           return;
         }
-        lastCsv = toCsv(rows);
+        lastCsv = toCsv(rows, ({ tab: "\t", comma: ",", semicolon: ";", pipe: "|" })[document.getElementById("csv-delim").value] || ",", document.getElementById("csv-header").checked);
         csvOutput.textContent = lastCsv;
         csvDownload.disabled = false;
         setStatus(csvStatus, `Converted ${rows.length} row${rows.length === 1 ? '' : 's'} successfully.`, 'ok');
