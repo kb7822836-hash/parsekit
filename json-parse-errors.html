@@ -131,6 +131,9 @@ const data = JSON.parse(text);</pre>
     <p><strong>Cause:</strong> JSON has no comments, and its only literal values are <code>true</code>, <code>false</code> and <code>null</code>. Text copied from JavaScript or Python often contains <code>// comments</code>, <code>True</code>, <code>False</code>, <code>None</code>, <code>undefined</code> or <code>NaN</code>, and parsers reject all of them. The message depends on where the parser first gets stuck.</p>
     <p><strong>Fix:</strong> Remove the comments and use <code>true</code>, <code>false</code> and <code>null</code>. In Python, <code>json.dumps()</code> writes the correct form for you.</p>
 
+    <h2>Fixing the error</h2>
+    <p>Most of these errors come from one small syntax mistake. Paste your text into the <a href="/json-repair.html">JSON Repair tool</a> to fix invalid JSON automatically, then run the result through the <a href="/json-formatter.html">JSON Formatter and validator</a> to confirm that it parses. If a string contains quotes or backslashes, <a href="/json-escape-unescape.html">escape the string</a> first.</p>
+
     <h2>Frequently asked questions</h2>
     <h3>What does "position N" mean in a JSON error?</h3>
     <p>It is the number of characters from the start of the text to the place where parsing failed. The real mistake is often just before that position, for example a missing comma after the previous value.</p>

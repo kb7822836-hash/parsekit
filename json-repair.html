@@ -126,6 +126,9 @@
 }</pre>
     <p>Here the key was quoted, the single quotes were replaced, <code>True</code> became <code>true</code>, and both trailing commas were removed.</p>
 
+    <h2>After you repair your JSON</h2>
+    <p>Once your JSON is fixed, check it with the <a href="/json-formatter.html">JSON Formatter and validator</a>. If it still fails, read <a href="/json-parse-errors.html">why JSON fails to parse</a> to find the exact error. Valid JSON can then be <a href="/json-to-csv.html">converted to CSV</a> or combined with another file using <a href="/merge-json.html">Merge JSON</a>.</p>
+
     <h2>Frequently asked questions</h2>
     <h3>Why does ChatGPT or Claude sometimes return invalid JSON?</h3>
     <p>AI models write text, and nothing forces that text to be valid JSON unless you use a structured output feature. Common problems are a markdown code fence around the JSON, a sentence before or after it, trailing commas, comments and single quotes.</p>

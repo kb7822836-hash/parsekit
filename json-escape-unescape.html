@@ -103,6 +103,9 @@
     <h2>How to unescape a JSON string</h2>
     <p>Paste an escaped string, with or without the surrounding quotes, and press Unescape. Sequences such as <code>\"</code>, <code>\n</code> and <code>\u00e9</code> are converted back to the real characters. If the result is itself valid JSON, the tool tells you, so you can copy it into the <a href="/json-formatter.html">JSON Formatter</a> to read it easily.</p>
 
+    <h2>Before and after escaping</h2>
+    <p>Escaped output must still be valid JSON, so check it with the <a href="/json-formatter.html">JSON Formatter and validator</a>. If a string will not parse because of quotes or backslashes, the <a href="/json-repair.html">JSON Repair tool</a> can often fix it, and this guide to <a href="/json-parse-errors.html">JSON parse errors</a> explains the usual causes.</p>
+
     <h2>Frequently asked questions</h2>
     <h3>Which characters are escaped in a JSON string?</h3>
     <p>Double quotes, backslashes, and control characters such as new lines, tabs and carriage returns. Optionally, all non-ASCII characters can be written as \uXXXX sequences.</p>

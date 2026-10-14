@@ -98,6 +98,9 @@
     <p>Choose a number of items per part that keeps each part small enough for your model, split, and then paste or send the parts one by one. Every part is valid JSON on its own, so the model can read it without extra cleanup. As a very rough rule, one token is about four characters of English text, but JSON with many short keys and numbers often uses more tokens, so start with a smaller part size and check.</p>
     <p>This tool splits by the number of items or keys, not by token count. The splitting itself happens in your browser, but anything you then paste into an AI service is sent to that service, so remove private fields first.</p>
 
+    <h2>What to do with the parts</h2>
+    <p>Every part is valid JSON on its own. You can <a href="/json-formatter.html">format and validate a part</a>, <a href="/json-to-csv.html">convert it to CSV</a>, or <a href="/merge-json.html">merge the parts back together</a> later.</p>
+
     <h2>Frequently asked questions</h2>
     <h3>Is my JSON uploaded to a server?</h3>
     <p>No. The split runs entirely in your browser with JavaScript. Nothing you paste leaves your device, so it is safe to use with private data.</p>
