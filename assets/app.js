@@ -169,16 +169,18 @@ document.addEventListener('DOMContentLoaded', () => {
       el.className = 'status-line' + (kind ? ' ' + kind : '');
     }
 
-    function deepMergeObjects(a, b) {
+    function uniqArr(arr) { const seen = new Set(); return arr.filter(x => { const k = JSON.stringify(x); if (seen.has(k)) return false; seen.add(k); return true; }); }
+
+    function deepMergeObjects(a, b, opts) {
       const result = { ...a };
       for (const key of Object.keys(b)) {
         if (
           typeof result[key] === 'object' && result[key] !== null && !Array.isArray(result[key]) &&
           typeof b[key] === 'object' && b[key] !== null && !Array.isArray(b[key])
         ) {
-          result[key] = deepMergeObjects(result[key], b[key]);
+          result[key] = deepMergeObjects(result[key], b[key], opts);
         } else {
-          result[key] = b[key];
+          if (Array.isArray(result[key]) && Array.isArray(b[key]) && opts.arr !== 'standard') { result[key] = opts.arr === 'union' ? uniqArr([...result[key], ...b[key]]) : [...result[key], ...b[key]]; } else { if (key in result && JSON.stringify(result[key]) !== JSON.stringify(b[key])) opts.overridden++; result[key] = b[key]; }
         }
       }
       return result;
@@ -201,14 +203,14 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const parsedA = JSON.parse(rawA);
         const parsedB = JSON.parse(rawB);
-        let merged;
+        let merged; const opts = { arr: document.getElementById('merge-arrays').value, overridden: 0 };
         if (Array.isArray(parsedA) && Array.isArray(parsedB)) {
-          merged = [...parsedA, ...parsedB];
+          merged = opts.arr === 'union' ? uniqArr([...parsedA, ...parsedB]) : [...parsedA, ...parsedB];
         } else if (
           typeof parsedA === 'object' && parsedA !== null && !Array.isArray(parsedA) &&
           typeof parsedB === 'object' && parsedB !== null && !Array.isArray(parsedB)
         ) {
-          merged = deepMergeObjects(parsedA, parsedB);
+          merged = deepMergeObjects(parsedA, parsedB, opts);
         } else {
           setStatus(mergeStatus, 'Both inputs must be the same shape: two objects, or two arrays.', 'error');
           mergeOutput.textContent = '';
@@ -217,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lastMerged = merged;
         mergeOutput.textContent = JSON.stringify(merged, null, 2);
         mergeDownload.disabled = false;
-        const kind = Array.isArray(merged) ? 'arrays concatenated' : 'objects deep-merged (right side wins on conflicts)';
+        const kind = Array.isArray(merged) ? (opts.arr === 'union' ? 'arrays joined, duplicates removed' : 'arrays concatenated') : 'objects deep-merged (right side wins on conflicts' + (opts.overridden ? ', ' + opts.overridden + ' value' + (opts.overridden === 1 ? '' : 's') + ' overridden' : '') + ')';
         setStatus(mergeStatus, `Merged successfully — ${kind}.`, 'ok');
       } catch (err) {
         mergeOutput.textContent = '';

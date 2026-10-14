@@ -70,6 +70,11 @@
     <button class="btn secondary" id="merge-clear">Clear</button>
   </div>
 
+  <div class="controls-row">
+    <label for="merge-arrays">Arrays</label>
+    <select id="merge-arrays"><option value="standard">Standard (join top-level arrays, B wins on nested)</option><option value="join">Always join arrays</option><option value="union">Join arrays, remove duplicates</option></select>
+  </div>
+
   <div class="workbench">
     <div class="panel">
       <div class="panel-label"><span>JSON A</span></div>
