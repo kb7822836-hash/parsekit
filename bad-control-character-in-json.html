@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bad Control Character in String Literal (JSON): Fix | Parsekit</title>
+<meta name="description" content="Fix 'Bad control character in string literal in JSON' and Python 'Invalid control character': raw newlines and tabs inside JSON strings must be escaped.">
+<link rel="canonical" href="https://parsekit.net/bad-control-character-in-json.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/csv-to-json.html">CSV to JSON</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/json-splitter.html">JSON Splitter</a>
+      <a href="/json-escape-unescape.html">Escape/Unescape</a>
+      <a href="/json-repair.html">JSON Repair</a>
+      <a href="/json-parse-errors.html">Parse Errors</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">guide</p>
+    <h1>Bad control character in string literal</h1>
+    <p>A string inside your JSON contains a real line break, tab or other control character. JSON requires these to be escaped.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+
+    <h2>Quick answer</h2>
+    <p>JSON strings cannot contain raw control characters such as a new line, a tab or a carriage return. They must be written as escape sequences: <code>\n</code>, <code>\t</code> and <code>\r</code>. <strong>Fix:</strong> escape those characters, or let <code>JSON.stringify()</code> do it for you when you build the JSON.</p>
+
+    <h2>The same error in different languages</h2>
+    <ul>
+      <li>Chrome and Node.js: <code>Bad control character in string literal in JSON at position N</code></li>
+      <li>Firefox: <code>JSON.parse: bad control character in string literal at line X column Y of the JSON data</code></li>
+      <li>Python: <code>json.decoder.JSONDecodeError: Invalid control character at: line X column Y</code></li>
+    </ul>
+
+    <h2>Example that fails</h2>
+    <p>The value below is split over two lines in the text itself:</p>
+<pre><code>{
+  "message": "first line
+second line"
+}</code></pre>
+
+    <h2>Correct version</h2>
+<pre><code>{
+  "message": "first line\nsecond line"
+}</code></pre>
+
+    <h2>Characters that must be escaped inside a string</h2>
+    <ul>
+      <li>New line: <code>\n</code></li>
+      <li>Carriage return: <code>\r</code></li>
+      <li>Tab: <code>\t</code></li>
+      <li>Double quote: <code>\"</code></li>
+      <li>Backslash: <code>\\</code></li>
+      <li>Any other character below code 32: <code>\u0000</code> style escape, for example <code>\u001f</code></li>
+    </ul>
+
+    <h2>How to fix it in code</h2>
+    <p>Do not build JSON by joining strings by hand. Build an object and let the language write the JSON:</p>
+<pre><code>const text = "first line\nsecond line";
+const json = JSON.stringify({ message: text });
+// {"message":"first line\nsecond line"}</code></pre>
+    <p>In Python, <code>json.dumps()</code> does the same. If you must read JSON that already contains raw control characters, Python can be told to allow them:</p>
+<pre><code>import json
+
+data = json.loads(text, strict=False)</code></pre>
+    <p>JavaScript has no such option, so the text needs to be repaired first.</p>
+
+    <h2>Fix existing text with Parsekit</h2>
+    <p>Paste the broken JSON into the <a href="/json-repair.html">JSON Repair tool</a> to fix many string problems automatically. To escape or unescape a single text value, use the <a href="/json-escape-unescape.html">JSON Escape / Unescape tool</a>. Use the <a href="/json-formatter.html">JSON Formatter</a> to find the exact line where parsing fails.</p>
+
+    <h2>FAQ</h2>
+    <h3>Can I put a real new line inside a JSON string?</h3>
+    <p>No. The JSON standard does not allow it. Write <code>\n</code> instead.</p>
+    <h3>Why does it happen with text copied from Word or a web page?</h3>
+    <p>Copied text often contains hidden line breaks or tab characters. When pasted into a string, they become raw control characters.</p>
+    <h3>Are line breaks between properties a problem?</h3>
+    <p>No. New lines outside of strings, between properties and values, are normal whitespace and are allowed.</p>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/unexpected-token-o-in-json.html">Unexpected token o in JSON at position 1</a></li>
+      <li><a href="/unexpected-end-of-json-input.html">Unexpected end of JSON input</a></li>
+      <li><a href="/unexpected-token-less-than-in-json.html">Unexpected token &lt; in JSON at position 0</a></li>
+      <li><a href="/undefined-is-not-valid-json.html">"undefined" is not valid JSON</a></li>
+      <li><a href="/json-parse-errors.html">All JSON parse errors explained</a></li>
+    </ul>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I put a real new line inside a JSON string?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The JSON standard does not allow it. Write the escape sequence \\n instead." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does it happen with text copied from Word or a web page?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Copied text often contains hidden line breaks or tab characters. When pasted into a string, they become raw control characters." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are line breaks between properties a problem?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. New lines outside of strings, between properties and values, are normal whitespace and are allowed." }
+    }
+  ]
+}
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

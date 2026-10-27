@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>"undefined" is not valid JSON: Causes and Fix | Parsekit</title>
+<meta name="description" content="Why JSON.parse throws '\"undefined\" is not valid JSON' or 'Unexpected token u in JSON at position 0', and how to fix it with safe parsing and localStorage checks.">
+<link rel="canonical" href="https://parsekit.net/undefined-is-not-valid-json.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/csv-to-json.html">CSV to JSON</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/json-splitter.html">JSON Splitter</a>
+      <a href="/json-escape-unescape.html">Escape/Unescape</a>
+      <a href="/json-repair.html">JSON Repair</a>
+      <a href="/json-parse-errors.html">Parse Errors</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">guide</p>
+    <h1>"undefined" is not valid JSON</h1>
+    <p>You passed <code>undefined</code> (or the text "undefined") to <code>JSON.parse()</code>. Here is where it comes from and how to guard against it.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+
+    <h2>Quick answer</h2>
+    <p><code>JSON.parse(undefined)</code> converts <code>undefined</code> to the text <code>undefined</code>, which is not valid JSON. The parser stops at the letter <code>u</code>. <strong>Fix:</strong> find out why the value is <code>undefined</code> (a missing property, a function that returns nothing, a bad localStorage value) and check it before parsing.</p>
+
+    <h2>The same error in different browsers</h2>
+    <ul>
+      <li>Older Chrome and Node.js: <code>Unexpected token u in JSON at position 0</code></li>
+      <li>Newer Chrome and Node.js: <code>"undefined" is not valid JSON</code></li>
+      <li>Firefox: <code>JSON.parse: unexpected character at line 1 column 1 of the JSON data</code></li>
+    </ul>
+
+    <h2>Example that fails</h2>
+<pre><code>const config = {};
+JSON.parse(config.data);   // config.data is undefined</code></pre>
+
+    <h2>Common causes</h2>
+
+    <h3>1. A missing property or wrong key name</h3>
+    <p>You read <code>response.data</code>, <code>body.payload</code> or <code>event.detail</code>, but the property does not exist or has a different name. Print the whole object to check.</p>
+
+    <h3>2. A function that returns nothing</h3>
+    <p>A function without a <code>return</code> statement gives <code>undefined</code>. Passing its result to <code>JSON.parse()</code> fails.</p>
+
+    <h3>3. The text "undefined" saved in localStorage</h3>
+    <p><code>JSON.stringify(undefined)</code> returns <code>undefined</code>, and <code>localStorage.setItem("key", undefined)</code> stores the text <code>"undefined"</code>. Later, <code>getItem</code> returns that text, and parsing it fails.</p>
+<pre><code>// bad: stores the text "undefined" if value is undefined
+localStorage.setItem("prefs", JSON.stringify(value));
+
+// better: only save real values
+if (value !== undefined) {
+  localStorage.setItem("prefs", JSON.stringify(value));
+}</code></pre>
+    <p>If the bad text is already saved, run <code>localStorage.removeItem("prefs")</code> once to clear it.</p>
+
+    <h2>A safe parse helper</h2>
+<pre><code>function safeParse(text, fallback = null) {
+  if (typeof text !== "string") return fallback;
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    return fallback;
+  }
+}
+
+const prefs = safeParse(localStorage.getItem("prefs"), {});</code></pre>
+
+    <h2>If you have a string with JSON in it</h2>
+    <p>Paste it into the <a href="/json-formatter.html">JSON Formatter</a> to check the syntax. Broken text can be fixed with the <a href="/json-repair.html">JSON Repair tool</a>.</p>
+
+    <h2>FAQ</h2>
+    <h3>Is undefined valid in JSON?</h3>
+    <p>No. JSON has no undefined value. It supports strings, numbers, booleans, null, arrays and objects. When <code>JSON.stringify</code> meets an undefined property in an object, it leaves that property out.</p>
+    <h3>What is the difference between null and undefined here?</h3>
+    <p><code>JSON.parse(null)</code> returns <code>null</code> without an error, but <code>JSON.parse(undefined)</code> throws.</p>
+    <h3>Why does it only fail on the first page load?</h3>
+    <p>On the first visit nothing is saved yet, so the value is missing. Always give your code a fallback for that case.</p>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/unexpected-token-o-in-json.html">Unexpected token o in JSON at position 1</a></li>
+      <li><a href="/unexpected-end-of-json-input.html">Unexpected end of JSON input</a></li>
+      <li><a href="/unexpected-token-less-than-in-json.html">Unexpected token &lt; in JSON at position 0</a></li>
+      <li><a href="/bad-control-character-in-json.html">Bad control character in string literal</a></li>
+      <li><a href="/json-parse-errors.html">All JSON parse errors explained</a></li>
+    </ul>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is undefined valid in JSON?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. JSON has no undefined value. It supports strings, numbers, booleans, null, arrays and objects. When JSON.stringify meets an undefined property in an object, it leaves that property out." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between null and undefined here?",
+      "acceptedAnswer": { "@type": "Answer", "text": "JSON.parse(null) returns null without an error, but JSON.parse(undefined) throws a SyntaxError." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does it only fail on the first page load?",
+      "acceptedAnswer": { "@type": "Answer", "text": "On the first visit nothing is saved yet, so the value is missing. Always give your code a fallback for that case." }
+    }
+  ]
+}
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

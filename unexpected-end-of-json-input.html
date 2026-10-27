@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unexpected End of JSON Input: Causes and Fixes | Parsekit</title>
+<meta name="description" content="What 'Unexpected end of JSON input' means and how to fix it: empty responses, truncated JSON, 204 status and missing data in JavaScript and Python.">
+<link rel="canonical" href="https://parsekit.net/unexpected-end-of-json-input.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/csv-to-json.html">CSV to JSON</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/json-splitter.html">JSON Splitter</a>
+      <a href="/json-escape-unescape.html">Escape/Unescape</a>
+      <a href="/json-repair.html">JSON Repair</a>
+      <a href="/json-parse-errors.html">Parse Errors</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">guide</p>
+    <h1>Unexpected end of JSON input</h1>
+    <p>The parser ran out of text before the JSON was complete. The input is either empty or cut off.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+
+    <h2>Quick answer</h2>
+    <p>This error means <code>JSON.parse()</code> reached the end of the text while it still expected more. Two things cause it almost every time: the text is <strong>empty</strong> (an empty string, or a response with no body), or the JSON is <strong>truncated</strong> (a missing closing brace or bracket).</p>
+
+    <h2>The same error in other places</h2>
+    <ul>
+      <li>Chrome and Node.js: <code>Unexpected end of JSON input</code> (newer versions may show a more specific message about the position)</li>
+      <li>Firefox: <code>JSON.parse: unexpected end of data at line 1 column 1 of the JSON data</code></li>
+      <li>Python: <code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></li>
+    </ul>
+
+    <h2>Example that fails</h2>
+<pre><code>JSON.parse("");          // empty text
+JSON.parse('{"a": 1');   // missing closing brace</code></pre>
+
+    <h2>Cause 1: an empty response</h2>
+    <p>The server replied with status 204 (No Content), an empty body, or crashed before sending data. Calling <code>res.json()</code> on that fails.</p>
+<pre><code>async function getJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const text = await res.text();
+  if (!text.trim()) return null;   // nothing to parse
+  return JSON.parse(text);
+}</code></pre>
+
+    <h2>Cause 2: truncated JSON</h2>
+    <p>The text was cut off. Typical reasons are a response size limit, a stream that closed early, a file that was not fully written, or a copy-and-paste that missed the last lines. Check that the number of <code>{</code> matches <code>}</code> and <code>[</code> matches <code>]</code>. Paste the text into the <a href="/json-formatter.html">JSON Formatter</a> to see where it stops, or try the <a href="/json-repair.html">JSON Repair tool</a>, which can close missing brackets.</p>
+
+    <h2>Cause 3: a missing value</h2>
+<pre><code>const raw = localStorage.getItem("settings");
+const settings = raw ? JSON.parse(raw) : {};   // safe</code></pre>
+    <p>Note that <code>JSON.parse(null)</code> returns <code>null</code> without an error, but an empty string always throws.</p>
+
+    <h2>The same problem in Python</h2>
+<pre><code>import json
+
+text = response.text
+if not text.strip():
+    data = None
+else:
+    data = json.loads(text)</code></pre>
+
+    <h2>FAQ</h2>
+    <h3>Why does this happen only sometimes?</h3>
+    <p>Usually the server sometimes returns an empty or partial body, for example during a timeout or an error. Log the raw text before parsing to see what arrived.</p>
+    <h3>Does a 204 response cause this?</h3>
+    <p>Yes. A 204 response has no body by design, so calling <code>res.json()</code> on it throws this error.</p>
+    <h3>Can the file be too big?</h3>
+    <p>Very large files can be cut by a proxy or a size limit. If the file is large, the <a href="/json-splitter.html">JSON Splitter</a> can break it into smaller parts.</p>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/unexpected-token-o-in-json.html">Unexpected token o in JSON at position 1</a></li>
+      <li><a href="/unexpected-token-less-than-in-json.html">Unexpected token &lt; in JSON at position 0</a></li>
+      <li><a href="/undefined-is-not-valid-json.html">"undefined" is not valid JSON</a></li>
+      <li><a href="/bad-control-character-in-json.html">Bad control character in string literal</a></li>
+      <li><a href="/json-parse-errors.html">All JSON parse errors explained</a></li>
+    </ul>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does this happen only sometimes?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Usually the server sometimes returns an empty or partial body, for example during a timeout or an error. Log the raw text before parsing to see what arrived." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does a 204 response cause this?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. A 204 response has no body by design, so calling res.json() on it throws this error." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can the file be too big?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Very large files can be cut by a proxy or a size limit. A JSON splitter can break a large file into smaller parts." }
+    }
+  ]
+}
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

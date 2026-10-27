@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unexpected token o in JSON at position 1: Cause and Fix | Parsekit</title>
+<meta name="description" content="Why JSON.parse throws 'Unexpected token o in JSON at position 1' or '[object Object] is not valid JSON', and how to fix it in fetch, axios and localStorage code.">
+<link rel="canonical" href="https://parsekit.net/unexpected-token-o-in-json.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/csv-to-json.html">CSV to JSON</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/json-splitter.html">JSON Splitter</a>
+      <a href="/json-escape-unescape.html">Escape/Unescape</a>
+      <a href="/json-repair.html">JSON Repair</a>
+      <a href="/json-parse-errors.html">Parse Errors</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">guide</p>
+    <h1>Unexpected token o in JSON at position 1</h1>
+    <p>You are almost certainly passing an object to <code>JSON.parse()</code> instead of a string. Here is why it happens and how to fix it.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+
+    <h2>Quick answer</h2>
+    <p><code>JSON.parse()</code> only accepts text. If you give it an object, JavaScript first turns the object into the text <code>[object Object]</code>. The parser reads <code>[</code> (an array start), then hits the letter <code>o</code> at position 1 and stops. <strong>Fix:</strong> do not parse it. The value is already an object, so use it directly.</p>
+
+    <h2>The same error in different browsers</h2>
+    <ul>
+      <li>Older Chrome and Node.js: <code>Unexpected token o in JSON at position 1</code></li>
+      <li>Newer Chrome and Node.js: <code>"[object Object]" is not valid JSON</code></li>
+      <li>Firefox: <code>JSON.parse: unexpected character at line 1 column 2 of the JSON data</code></li>
+    </ul>
+
+    <h2>Example that fails</h2>
+<pre><code>const user = { name: "Ali" };
+JSON.parse(user); // SyntaxError: Unexpected token o in JSON at position 1</code></pre>
+
+    <h2>The fix</h2>
+<pre><code>const user = { name: "Ali" };
+console.log(user.name); // already an object, no parsing needed</code></pre>
+
+    <h2>Common causes</h2>
+
+    <h3>1. Parsing the result of response.json()</h3>
+    <p><code>response.json()</code> already parses the body and returns an object.</p>
+<pre><code>const res = await fetch("/api/user");
+const data = await res.json();   // object
+// JSON.parse(data);             // wrong
+console.log(data.name);          // correct</code></pre>
+
+    <h3>2. Axios and jQuery parse automatically</h3>
+    <p>Axios puts the parsed body in <code>response.data</code>. jQuery with <code>dataType: "json"</code> also passes an object to the callback. Parsing it again causes this error.</p>
+
+    <h3>3. Saving an object to localStorage without stringifying</h3>
+    <p><code>localStorage</code> stores strings only. Saving an object directly stores the text <code>[object Object]</code>, and that text can never be parsed back.</p>
+<pre><code>// correct pair
+localStorage.setItem("user", JSON.stringify(user));
+const saved = JSON.parse(localStorage.getItem("user"));</code></pre>
+    <p>If the bad value is already saved, remove it with <code>localStorage.removeItem("user")</code> and save it again.</p>
+
+    <h2>How to check what you have</h2>
+<pre><code>console.log(typeof value); // "object" means do not parse it
+console.log(String(value)); // "[object Object]" confirms this error</code></pre>
+    <p>If the value is a string that really contains JSON text, paste it into the <a href="/json-formatter.html">JSON Formatter</a> to find syntax mistakes, or the <a href="/json-repair.html">JSON Repair tool</a> to fix them.</p>
+
+    <h2>FAQ</h2>
+    <h3>Why does the error say position 1?</h3>
+    <p>Position counts from zero. The first character is <code>[</code> at position 0 and the letter <code>o</code> of "object" is at position 1.</p>
+    <h3>Can I just wrap JSON.parse in try/catch?</h3>
+    <p>That hides the problem. First check <code>typeof value</code>. Only parse when it is a string.</p>
+    <h3>Is my JSON uploaded when I use Parsekit tools?</h3>
+    <p>No. The tools run in your browser and nothing you paste is sent to a server.</p>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/unexpected-end-of-json-input.html">Unexpected end of JSON input</a></li>
+      <li><a href="/unexpected-token-less-than-in-json.html">Unexpected token &lt; in JSON at position 0</a></li>
+      <li><a href="/undefined-is-not-valid-json.html">"undefined" is not valid JSON</a></li>
+      <li><a href="/bad-control-character-in-json.html">Bad control character in string literal</a></li>
+      <li><a href="/json-parse-errors.html">All JSON parse errors explained</a></li>
+    </ul>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does the error say position 1?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Position counts from zero. The first character of the text [object Object] is a bracket at position 0, and the letter o of the word object is at position 1." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I just wrap JSON.parse in try/catch?",
+      "acceptedAnswer": { "@type": "Answer", "text": "That hides the problem. First check typeof value and only parse when it is a string." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my JSON uploaded when I use Parsekit tools?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The tools run in your browser and nothing you paste is sent to a server." }
+    }
+  ]
+}
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
