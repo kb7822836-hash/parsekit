@@ -79,6 +79,7 @@
     </ul>
 
     <h2 id="unexpected-token-html">Unexpected token &lt; in JSON at position 0</h2>
+    <p>Full guide: <a href="/unexpected-token-less-than-in-json.html">Unexpected token &lt; in JSON at position 0</a></p>
     <p><strong>Newer wording:</strong> Unexpected token '&lt;', "&lt;!DOCTYPE "... is not valid JSON. <strong>Python:</strong> Expecting value: line 1 column 1 (char 0).</p>
     <p><strong>Cause:</strong> The text you tried to parse is not JSON at all. It starts with a <code>&lt;</code>, which usually means the server sent back an HTML page, such as a 404 page, a login page or an error page, instead of JSON.</p>
     <p><strong>Fix:</strong> Look at what the response really contains before you parse it, and check the status code and the address you called.</p>
@@ -89,16 +90,19 @@ console.log(text.slice(0, 200)); // is this HTML?
 const data = JSON.parse(text);</pre>
 
     <h2 id="unexpected-end">Unexpected end of JSON input</h2>
+    <p>Full guide: <a href="/unexpected-end-of-json-input.html">Unexpected end of JSON input</a></p>
     <p><strong>Python:</strong> Expecting value: line 1 column 1 (char 0) for empty text, or Unterminated string starting at.</p>
     <p><strong>Cause:</strong> The text is empty, or it stops before the JSON is finished. Typical reasons are an empty response body (for example a 204 status), a cut-off download, or a copy that missed the last bracket.</p>
     <p><strong>Fix:</strong> Check that the text is not empty before parsing. If it was cut off, get the full text again. If you only have the cut-off copy, the <a href="/json-repair.html">JSON Repair tool</a> can close the missing brackets and braces when the text stops after a complete value.</p>
 
     <h2 id="object-object">[object Object] is not valid JSON</h2>
+    <p>Full guide: <a href="/unexpected-token-o-in-json.html">Unexpected token o in JSON at position 1 and [object Object]</a></p>
     <p><strong>Older wording:</strong> Unexpected token o in JSON at position 1.</p>
     <p><strong>Cause:</strong> You passed an object to <code>JSON.parse</code>. JavaScript turns the object into the text "[object Object]" first, and that text is not JSON. The data was probably already parsed, for example by <code>response.json()</code> or by an HTTP library.</p>
     <p><strong>Fix:</strong> Do not parse it a second time. If you need JSON text from an object, use <code>JSON.stringify(obj)</code>.</p>
 
     <h2 id="undefined">"undefined" is not valid JSON</h2>
+    <p>Full guide: <a href="/undefined-is-not-valid-json.html">"undefined" is not valid JSON</a></p>
     <p><strong>Older wording:</strong> Unexpected token u in JSON at position 0.</p>
     <p><strong>Cause:</strong> The value you parsed is <code>undefined</code>. A property name may be wrong, a request may not have finished, or a value was never set.</p>
     <p><strong>Fix:</strong> Check the variable before you parse it.</p>
@@ -132,6 +136,7 @@ const data = JSON.parse(text);</pre>
     <p><strong>Fix:</strong> Parse one value at a time. For JSON Lines, split the text into lines and parse each line separately. To break a large JSON array into smaller files, use the <a href="/json-splitter.html">JSON Splitter</a>.</p>
 
     <h2 id="control-character">Bad control character in a string</h2>
+    <p>Full guide: <a href="/bad-control-character-in-json.html">Bad control character in string literal</a></p>
     <p><strong>Message:</strong> Bad control character in string literal in JSON at position N. <strong>Python:</strong> Invalid control character at: line L column C.</p>
     <p><strong>Cause:</strong> A string contains a real line break or tab. In JSON these must be written as <code>\n</code> and <code>\t</code>.</p>
     <p><strong>Fix:</strong> Replace the line break with <code>\n</code>. The <a href="/json-escape-unescape.html">JSON Escape tool</a> escapes text for you, and quotes inside strings must be written as <code>\"</code>.</p>
@@ -208,4 +213,5 @@ const data = JSON.parse(text);</pre>
 </script>
 </body>
 </html>
+
 
