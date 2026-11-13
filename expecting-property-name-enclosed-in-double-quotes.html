@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expecting property name enclosed in double quotes (Python) | Parsekit</title>
+<meta name="description" content="Why Python raises JSONDecodeError: Expecting property name enclosed in double quotes, and how to fix single quotes, trailing commas and unquoted keys. Includes the JavaScript version.">
+<link rel="canonical" href="https://parsekit.net/expecting-property-name-enclosed-in-double-quotes.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/csv-to-json.html">CSV to JSON</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/json-splitter.html">JSON Splitter</a>
+      <a href="/json-escape-unescape.html">Escape/Unescape</a>
+      <a href="/json-repair.html">JSON Repair</a>
+      <a href="/json-parse-errors.html">Parse Errors</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">guide</p>
+    <h1>JSONDecodeError: Expecting property name enclosed in double quotes</h1>
+    <p>Python found a key that is not wrapped in double quotes, or a comma with no key after it. Here are the four usual causes and the fix for each.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+
+    <h2>Quick answer</h2>
+    <p>JSON requires every key to be a string in <strong>double</strong> quotes. Python raises <code>json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes</code> when it expects a key and finds anything else: a single quote, a bare word, or a closing brace after a trailing comma. <strong>Fix:</strong> create the text with <code>json.dumps()</code> instead of <code>str()</code>, remove trailing commas, and put double quotes around every key.</p>
+
+    <h2>Example that fails</h2>
+<pre><code>import json
+
+data = {"name": "Ali"}
+text = str(data)            # "{'name': 'Ali'}" uses single quotes, not JSON
+json.loads(text)
+# json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)</code></pre>
+    <p>The message points at the exact spot. <code>line 1 column 2 (char 1)</code> is the character right after the opening brace, where the first key starts.</p>
+
+    <h2>Common causes and fixes</h2>
+
+    <h3>1. Single quotes (a Python dict printed as text)</h3>
+    <p>This is the most common cause. <code>str(my_dict)</code> and <code>print(my_dict)</code> produce Python syntax with single quotes, and <code>True</code>, <code>False</code> and <code>None</code> instead of <code>true</code>, <code>false</code> and <code>null</code>. That text is not valid JSON.</p>
+<pre><code>import json
+
+data = {"name": "Ali", "active": True}
+
+text = json.dumps(data)     # '{"name": "Ali", "active": true}'
+back = json.loads(text)     # works</code></pre>
+    <p>If you only have the Python-style text and cannot change the source, <code>ast.literal_eval</code> reads it safely and gives you a real dictionary. Unlike <code>eval</code>, it only accepts plain literals.</p>
+<pre><code>import ast, json
+
+text = "{'name': 'Ali', 'active': True}"
+data = ast.literal_eval(text)   # a real Python dict
+valid_json = json.dumps(data)   # now it is valid JSON</code></pre>
+
+    <h3>2. A trailing comma</h3>
+    <p>A comma after the last item makes the parser look for another key and find the closing brace.</p>
+<pre><code>json.loads('{"a": 1,}')
+# JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 9 (char 8)
+
+json.loads('{"a": 1}')   # correct</code></pre>
+    <p>Newer Python versions (3.13 and later) report this case with a clearer message about an illegal trailing comma. The fix is the same: delete the last comma.</p>
+
+    <h3>3. Keys without quotes</h3>
+    <p>JavaScript object literals allow <code>{name: "Ali"}</code>. JSON does not. Put double quotes around every key.</p>
+<pre><code>json.loads('{name: "Ali"}')     # fails
+json.loads('{"name": "Ali"}')   # correct</code></pre>
+
+    <h3>4. A comment or stray text before the key</h3>
+    <p>JSON has no comments. A <code>//</code> line or a note inside the braces is read as a key that is not quoted. Remove it, or strip comments before parsing.</p>
+
+    <h2>The same error in JavaScript</h2>
+    <p>JavaScript reports the same mistake with different wording:</p>
+    <ul>
+      <li>Chrome and Node.js: <code>Expected property name or '}' in JSON at position 1</code></li>
+      <li>Trailing comma in Chrome and Node.js: <code>Expected double-quoted property name in JSON at position 8</code></li>
+      <li>Firefox: <code>JSON.parse: expected double-quoted property name at line 1 column 2 of the JSON data</code></li>
+    </ul>
+<pre><code>JSON.parse("{'name': 'Ali'}");   // fails: single quotes
+JSON.parse('{"name": "Ali"}');   // correct</code></pre>
+
+    <h2>Find the exact spot</h2>
+<pre><code>try:
+    data = json.loads(text)
+except json.JSONDecodeError as e:
+    print(e.msg, "line", e.lineno, "column", e.colno, "char", e.pos)
+    print(repr(text[max(0, e.pos - 20):e.pos + 20]))</code></pre>
+    <p>For a long document, paste it into the <a href="/json-formatter.html">JSON Formatter</a> to see the error highlighted, or into the <a href="/json-repair.html">JSON Repair tool</a>, which fixes single quotes, trailing commas and unquoted keys automatically.</p>
+
+    <div style="margin:2rem 0;padding:1.25rem 1.5rem;background:#16212E;border-radius:8px;">
+      <p style="margin:0 0 .75rem;color:#fff;font-weight:600;">Have broken JSON right now?</p>
+      <p style="margin:0 0 1rem;color:#cfd8e3;">Paste it into the free JSON Repair tool. It runs in your browser, so nothing is uploaded.</p>
+      <a href="/json-repair.html" style="display:inline-block;padding:.6rem 1.1rem;background:#5EC8D8;color:#16212E;font-weight:600;border-radius:6px;text-decoration:none;">Open JSON Repair tool</a>
+    </div>
+
+    <h2>FAQ</h2>
+    <h3>Why does Python print a dict with single quotes?</h3>
+    <p>Printing a dictionary shows Python syntax, not JSON. Python uses single quotes and writes <code>True</code> and <code>None</code>. Use <code>json.dumps()</code> whenever you need JSON text.</p>
+    <h3>Can I make json.loads accept single quotes?</h3>
+    <p>No. The standard library follows the JSON specification and rejects them. Convert the text with <code>ast.literal_eval</code> and <code>json.dumps</code>, or fix the source that creates it.</p>
+    <h3>Is my JSON uploaded when I use Parsekit tools?</h3>
+    <p>No. The tools run in your browser and nothing you paste is sent to a server.</p>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/expecting-value-line-1-column-1.html">Python JSONDecodeError: Expecting value line 1 column 1</a></li>
+      <li><a href="/unexpected-end-of-json-input.html">Unexpected end of JSON input</a></li>
+      <li><a href="/unexpected-token-o-in-json.html">Unexpected token o in JSON at position 1</a></li>
+      <li><a href="/bad-control-character-in-json.html">Bad control character in string literal</a></li>
+      <li><a href="/json-parse-errors.html">All JSON parse errors explained</a></li>
+    </ul>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does Python print a dict with single quotes?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Printing a dictionary shows Python syntax, not JSON. Python uses single quotes and writes True and None. Use json.dumps() whenever you need JSON text." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I make json.loads accept single quotes?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The standard library follows the JSON specification and rejects them. Convert the text with ast.literal_eval and json.dumps, or fix the source that creates it." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my JSON uploaded when I use Parsekit tools?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The tools run in your browser and nothing you paste is sent to a server." }
+    }
+  ]
+}
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
