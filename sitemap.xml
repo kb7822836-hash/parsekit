@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://parsekit.net/</loc>
@@ -44,5 +44,6 @@
   <url><loc>https://parsekit.net/unexpected-token-less-than-in-json.html</loc></url>
   <url><loc>https://parsekit.net/undefined-is-not-valid-json.html</loc></url>
   <url><loc>https://parsekit.net/bad-control-character-in-json.html</loc></url>
+  <url><loc>https://parsekit.net/expecting-value-line-1-column-1.html</loc></url>
 </urlset>
 
