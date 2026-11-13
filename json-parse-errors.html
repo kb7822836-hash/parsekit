@@ -93,6 +93,7 @@ console.log(text.slice(0, 200)); // is this HTML?
 const data = JSON.parse(text);</pre>
 
     <h2 id="unexpected-end">Unexpected end of JSON input</h2>
+    <p>Python version: <a href="/expecting-value-line-1-column-1.html">Expecting value: line 1 column 1</a></p>
     <p>Full guide: <a href="/unexpected-end-of-json-input.html">Unexpected end of JSON input</a></p>
     <p><strong>Python:</strong> Expecting value: line 1 column 1 (char 0) for empty text, or Unterminated string starting at.</p>
     <p><strong>Cause:</strong> The text is empty, or it stops before the JSON is finished. Typical reasons are an empty response body (for example a 204 status), a cut-off download, or a copy that missed the last bracket.</p>
@@ -114,6 +115,7 @@ const data = JSON.parse(text);</pre>
 }</pre>
 
     <h2 id="trailing-comma">Trailing comma errors</h2>
+    <p>Python version: <a href="/expecting-property-name-enclosed-in-double-quotes.html">Expecting property name enclosed in double quotes</a></p>
     <p><strong>Messages:</strong> Unexpected token } in JSON at position N, Expected double-quoted property name in JSON at position N. <strong>Python:</strong> Expecting property name enclosed in double quotes.</p>
     <p><strong>Cause:</strong> A comma after the last item of an object or array. JavaScript allows this in code, but JSON does not.</p>
     <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{"a": 1, "b": 2,}     // invalid
@@ -121,6 +123,7 @@ const data = JSON.parse(text);</pre>
     <p><strong>Fix:</strong> Remove the last comma. The <a href="/json-repair.html">JSON Repair tool</a> does this for you.</p>
 
     <h2 id="single-quotes">Single quotes and unquoted keys</h2>
+    <p>Python version: <a href="/expecting-property-name-enclosed-in-double-quotes.html">Expecting property name enclosed in double quotes</a></p>
     <p><strong>Messages:</strong> Unexpected token ' in JSON at position 1, Expected property name or '}' in JSON at position 1. <strong>Python:</strong> Expecting property name enclosed in double quotes.</p>
     <p><strong>Cause:</strong> JSON only accepts double quotes, and every key must be in quotes. Single quotes and keys without quotes work in JavaScript and Python code but are not valid JSON.</p>
     <pre style="min-height:0;height:auto;resize:none;padding:10px 12px;background:#fff;border:1px solid #c9c9c9;overflow-x:auto;">{'name': 'Ali'}       // invalid
