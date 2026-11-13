@@ -134,6 +134,7 @@ const data = JSON.parse(text);</pre>
     <p><strong>Fix:</strong> Add the comma at the position the message points to, usually right after the previous value. The position is counted in characters from the start of the text.</p>
 
     <h2 id="extra-data">Extra data after the JSON</h2>
+    <p>Full guide: <a href="/extra-data-line-column.html">Python JSONDecodeError: Extra data line 2 column 1</a></p>
     <p><strong>Messages:</strong> Unexpected non-whitespace character after JSON at position N. <strong>Python:</strong> Extra data: line L column C.</p>
     <p><strong>Cause:</strong> The text contains one complete JSON value followed by more text. This happens with two JSON objects pasted one after another, with files in JSON Lines format (one JSON value per line), or with a sentence after the JSON in an AI reply.</p>
     <p><strong>Fix:</strong> Parse one value at a time. For JSON Lines, split the text into lines and parse each line separately. To break a large JSON array into smaller files, use the <a href="/json-splitter.html">JSON Splitter</a>.</p>
