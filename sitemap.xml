@@ -46,5 +46,6 @@
   <url><loc>https://parsekit.net/bad-control-character-in-json.html</loc></url>
   <url><loc>https://parsekit.net/expecting-value-line-1-column-1.html</loc></url>
   <url><loc>https://parsekit.net/expecting-property-name-enclosed-in-double-quotes.html</loc></url>
+  <url><loc>https://parsekit.net/extra-data-line-column.html</loc></url>
 </urlset>
 

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python JSONDecodeError: Extra data: Cause and Fix | Parsekit</title>
+<meta name="description" content="Why Python raises JSONDecodeError: Extra data: line 2 column 1, and how to fix JSON Lines files, several objects in one file and stray text after valid JSON. Includes the JavaScript version.">
+<link rel="canonical" href="https://parsekit.net/extra-data-line-column.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KNQRNCZPSQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KNQRNCZPSQ');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" style="text-decoration:none;">
+      <span class="brand-mark">{ }</span> parsekit <span class="brand-tag">/ data tools</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/json-formatter.html">JSON Formatter</a>
+      <a href="/json-to-csv.html">JSON to CSV</a>
+      <a href="/csv-to-json.html">CSV to JSON</a>
+      <a href="/merge-json.html">Merge JSON</a>
+      <a href="/json-to-yaml.html">JSON to YAML</a>
+      <a href="/base64-encode-decode.html">Base64</a>
+      <a href="/json-diff.html">JSON Diff</a>
+      <a href="/url-encode-decode.html">URL Encode</a>
+      <a href="/json-splitter.html">JSON Splitter</a>
+      <a href="/json-escape-unescape.html">Escape/Unescape</a>
+      <a href="/json-repair.html">JSON Repair</a>
+      <a href="/json-parse-errors.html">Parse Errors</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="kicker">guide</p>
+    <h1>Python JSONDecodeError: Extra data: line 2 column 1</h1>
+    <p>Python parsed one valid JSON value and then found more text after it. That usually means several JSON objects in one file, a JSON Lines file, or a stray character at the end.</p>
+  </div>
+</div>
+
+<main class="page-body">
+  <div class="helper-copy">
+
+    <h2>Quick answer</h2>
+    <p><code>json.loads()</code> and <code>json.load()</code> accept exactly one JSON value. If anything other than whitespace follows it, Python raises <code>json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 8)</code>. <strong>Fix:</strong> if the file holds one JSON object per line, parse it line by line. If the objects are joined together, wrap them in an array or read them one at a time with <code>raw_decode</code>. If it is a stray character, delete it.</p>
+
+    <h2>What the message means</h2>
+    <p>The numbers show where the valid JSON <em>ended</em>, not where the mistake is in your logic. <code>line 2 column 1 (char 8)</code> means the first value finished at character 7 and something else starts at character 8. Look at that exact spot in your data.</p>
+
+    <h2>Example that fails</h2>
+<pre><code>import json
+
+text = '{"a": 1}\n{"b": 2}'
+json.loads(text)
+# json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 8)</code></pre>
+
+    <h2>Common causes and fixes</h2>
+
+    <h3>1. A JSON Lines (NDJSON) file</h3>
+    <p>JSON Lines stores one complete JSON object on every line. The whole file is not one JSON document, so <code>json.load(f)</code> fails at the second line. Exports from logs, databases and many APIs use this format.</p>
+<pre><code>import json
+
+items = []
+with open("data.jsonl", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()
+        if line:
+            items.append(json.loads(line))</code></pre>
+    <p>With pandas, <code>pd.read_json("data.jsonl", lines=True)</code> reads the same file into a table.</p>
+
+    <h3>2. Several JSON objects joined together</h3>
+    <p>Two responses saved one after the other, or objects appended to a file, give <code>{"a": 1}{"b": 2}</code>. That is not one JSON value. Read them one at a time with <code>raw_decode</code>:</p>
+<pre><code>import json
+
+decoder = json.JSONDecoder()
+text = text.strip()
+pos = 0
+items = []
+while pos &lt; len(text):
+    obj, end = decoder.raw_decode(text, pos)
+    items.append(obj)
+    pos = end
+    while pos &lt; len(text) and text[pos].isspace():
+        pos += 1</code></pre>
+    <p>Or fix the source so it writes one array, <code>[{"a": 1}, {"b": 2}]</code>. To combine files you already have, see <a href="/merge-json.html">Merge JSON files</a>.</p>
+
+    <h3>3. Stray text or an extra bracket at the end</h3>
+    <p>A copy and paste that grabbed one closing brace too many, a log line added after the data, or a leftover semicolon all trigger this error.</p>
+<pre><code>json.loads('{"a": 1}}')
+# JSONDecodeError: Extra data: line 1 column 8 (char 7)</code></pre>
+    <p>The message points at the first character after the valid value. Delete it, or paste the text into the <a href="/json-formatter.html">JSON Formatter</a> to find mismatched brackets.</p>
+
+    <h3>4. A file that was written twice</h3>
+    <p>Opening a file in append mode (<code>"a"</code>) and dumping a new object each run leaves several objects in one file. Open it with <code>"w"</code> to replace the content, or write one array.</p>
+
+    <h2>The same error in JavaScript</h2>
+    <ul>
+      <li>Newer Chrome and Node.js: <code>Unexpected non-whitespace character after JSON at position 7</code></li>
+      <li>Older Chrome and Node.js: <code>Unexpected token { in JSON at position 7</code></li>
+      <li>Firefox: <code>JSON.parse: unexpected non-whitespace character after JSON data at line 1 column 8 of the JSON data</code></li>
+    </ul>
+<pre><code>// JSON Lines in JavaScript
+const items = text.trim().split("\n").map(line =&gt; JSON.parse(line));</code></pre>
+
+    <h2>Find the exact spot</h2>
+<pre><code>try:
+    data = json.loads(text)
+except json.JSONDecodeError as e:
+    print(e.msg, "line", e.lineno, "column", e.colno, "char", e.pos)
+    print(repr(text[max(0, e.pos - 20):e.pos + 20]))</code></pre>
+
+    <div style="margin:2rem 0;padding:1.25rem 1.5rem;background:#16212E;border-radius:8px;">
+      <p style="margin:0 0 .75rem;color:#fff;font-weight:600;">Have broken JSON right now?</p>
+      <p style="margin:0 0 1rem;color:#cfd8e3;">Paste it into the free JSON Repair tool. It runs in your browser, so nothing is uploaded.</p>
+      <a href="/json-repair.html" style="display:inline-block;padding:.6rem 1.1rem;background:#5EC8D8;color:#16212E;font-weight:600;border-radius:6px;text-decoration:none;">Open JSON Repair tool</a>
+    </div>
+
+    <h2>FAQ</h2>
+    <h3>What does "Extra data" mean in JSON?</h3>
+    <p>The parser read one complete JSON value and then found more text that is not whitespace. A JSON document may contain only one top-level value.</p>
+    <h3>How do I read a JSON Lines file in Python?</h3>
+    <p>Open the file and call <code>json.loads()</code> on each line, or use <code>pandas.read_json(path, lines=True)</code>.</p>
+    <h3>Is my JSON uploaded when I use Parsekit tools?</h3>
+    <p>No. The tools run in your browser and nothing you paste is sent to a server.</p>
+
+    <h2>Related guides</h2>
+    <ul>
+      <li><a href="/expecting-value-line-1-column-1.html">Python JSONDecodeError: Expecting value line 1 column 1</a></li>
+      <li><a href="/expecting-property-name-enclosed-in-double-quotes.html">Python JSONDecodeError: Expecting property name enclosed in double quotes</a></li>
+      <li><a href="/unexpected-end-of-json-input.html">Unexpected end of JSON input</a></li>
+      <li><a href="/unexpected-token-o-in-json.html">Unexpected token o in JSON at position 1</a></li>
+      <li><a href="/json-parse-errors.html">All JSON parse errors explained</a></li>
+    </ul>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does Extra data mean in JSON?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The parser read one complete JSON value and then found more text that is not whitespace. A JSON document may contain only one top-level value." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I read a JSON Lines file in Python?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Open the file and call json.loads() on each line, or use pandas.read_json(path, lines=True)." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my JSON uploaded when I use Parsekit tools?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The tools run in your browser and nothing you paste is sent to a server." }
+    }
+  ]
+}
+</script>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>&copy; <span id="year"></span> Parsekit. Everything runs locally in your browser &mdash; nothing you paste is uploaded anywhere.</span>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
